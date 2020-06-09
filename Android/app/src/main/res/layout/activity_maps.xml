@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.welcome.WelcomeActivity">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.activity.map.MapsMainActivity" />
+
+    <include layout="@layout/map_action_buttons" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginTop="28dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/status_button"
+            style="@style/BaseAppButton"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="42dp"
+            android:background="@drawable/base_button_box_radius"
+            android:text="@string/my_status" />
+
+        <Button
+            android:id="@+id/configuration_button"
+            style="@style/BaseAppButton"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="42dp"
+            android:background="@drawable/base_button_box_radius"
+            android:text="@string/configuration" />
+
+    </LinearLayout>
+
+    <include layout="@layout/no_connection_alert" />
+</FrameLayout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>694979726136-q2564o505q6c9jsfe5m5835oj4u8t4n7.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.694979726136-q2564o505q6c9jsfe5m5835oj4u8t4n7</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBJjMtPrcLg5jDHm7ORe66SQOFpDqRvqVo</string>
+	<key>GCM_SENDER_ID</key>
+	<string>694979726136</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.contextgrid.healthgrid.test</string>
+	<key>PROJECT_ID</key>
+	<string>healthgrid-40c2f</string>
+	<key>STORAGE_BUCKET</key>
+	<string>healthgrid-40c2f.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:694979726136:ios:6be451b68af070d09d0fcd</string>
+	<key>DATABASE_URL</key>
+	<string>https://healthgrid-40c2f.firebaseio.com</string>
+</dict>
+</plist>

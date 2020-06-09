@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="base_button_corner_radius">7dp</dimen>
+    <dimen name="welcome_back_image_area_height">110dp</dimen>
+    <dimen name="welcome_image_area_margin_top">100dp</dimen>
+    <dimen name="welcome_front_image_area_height">170dp</dimen>
+    <dimen name="welcome_back_image_margin_bottom">30dp</dimen>
+    <!--    sum of welcome_front_image_area_height and welcome_back_image_margin_bottom -->
+    <dimen name="welcome_image_area_height">200dp</dimen>
+    <!--    sum of welcome_image_area_height and welcome_image_area_margin_top -->
+    <dimen name="welcome_text_margin_top">330dp</dimen>
+    <dimen name="map_action_button_radius">14dp</dimen>
+    <dimen name="bottom_sheet_bottom_padding">26dp</dimen>
+    <dimen name="date_picker_container_width">40dp</dimen>
+    <dimen name="date_picker_container_height">44dp</dimen>
+
+    <dimen name="history_map_padding">-14dp</dimen>
+    <dimen name="date_picker_margin_end">16dp</dimen>
+    <dimen name="date_picker_margin_bottom">45dp</dimen>
+    <dimen name="date_picker_max_height">56dp</dimen>
+    </resources>

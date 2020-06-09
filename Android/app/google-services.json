@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "694979726136",
+    "firebase_url": "https://healthgrid-40c2f.firebaseio.com",
+    "project_id": "healthgrid-40c2f",
+    "storage_bucket": "healthgrid-40c2f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:694979726136:android:fbb2ee14aca58bf09d0fcd",
+        "android_client_info": {
+          "package_name": "com.openar.healthgrid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "694979726136-3p9tanlb1tc9i3e86v2b9r17lq36c0p4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.openar.healthgrid",
+            "certificate_hash": "d62e897a9d6b6e1d3cb6bdbbfc832e9a7a4b9cf9"
+          }
+        },
+        {
+          "client_id": "694979726136-ivg1japmdcj5jvhh03rrq8ha6gil32mt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-DNVwnZ-DlpD7XZUNENzZ5dDBckoohaA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "694979726136-ivg1japmdcj5jvhh03rrq8ha6gil32mt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "694979726136-q2564o505q6c9jsfe5m5835oj4u8t4n7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.contextgrid.healthgrid.test"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

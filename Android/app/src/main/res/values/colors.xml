@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="base_color">#3CB5E5</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">@color/base_color</color>
+    <color name="colorAccent">@color/base_color</color>
+    <color name="base_button_text_color">#FFFFFF</color>
+    <color name="base_button_background_color">@color/base_color</color>
+    <color name="inactive_button_background_color">@android:color/darker_gray</color>
+    <color name="background">@android:color/white</color>
+    <color name="map_small_button_color">#FFFFFF</color>
+    <color name="map_small_button_border_color">#80979797</color>
+    <color name="legend_healthy_color">#69AD84</color>
+    <color name="legend_not_feeling_well_color">#F6B76C</color>
+    <color name="legend_infected_color">#EE8E89</color>
+    <color name="dialog_background">#F5F5F7</color>
+    <color name="inactive_view_color">#80979797</color>
+    <color name="weekday_color">#dee2e3</color>
+    <color name="weekday_focus_color">#F5F5F7</color>
+    <color name="day_color">#000000</color>
+    <color name="offline_status_color">#E04A55</color>
+
+</resources>

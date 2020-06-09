@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout android:id="@+id/top_coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="88dp"
+    android:layout_gravity="top"
+    android:layout_marginTop="-88dp"
+    android:background="@color/offline_status_color"
+    android:paddingTop="28dp"
+    android:paddingBottom="12dp"
+    android:visibility="gone"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/legend_item_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/offline_mode_message"
+        android:textColor="@android:color/white"
+        android:textSize="13sp" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

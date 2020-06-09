@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+    <item android:drawable="@android:color/white" />
+    <item>
+        <bitmap
+            android:gravity="center|fill"
+            android:src="@drawable/splash_background_image" />
+    </item>
+    <item
+        android:bottom="164dp"
+        android:left="43dp"
+        android:right="43dp">
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/splash_logo" />
+    </item>
+
+    <item
+        android:top="164dp"
+        android:left="48dp"
+        android:right="48dp">
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/splash_text" />
+    </item>
+</layer-list>

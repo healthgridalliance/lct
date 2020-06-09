@@ -1,0 +1,51 @@
+"back" = "Back";
+"cancel" = "Cancel";
+"delete" = "Delete";
+"ok" = "OK";
+"close" = "Close";
+
+"connection_error_message" = "You are in offline mode.\nPlease connect to the internet to view the data";
+
+"location_popup_title" = "Permission for Location was denied";
+"location_popup_message" = "Please enable access to Location in the Settings app";
+"location_popup_settings" = "Settings";
+
+"onboarding_description_title" = "Start your way to safety";
+"onboarding_description_button" = "Start Journey";
+"onboarding_features_title" = "Keep you privacy save";
+"onboarding_features_button" = "Privacy Policy";
+
+"privacy_policy_title" = "Privacy Policy of tracking location";
+"privacy_policy_button" = "Agree to Track Location";
+"privacy_policy_agree" = "I agree with Privacy Policy";
+
+"map_status_button" = "My status";
+"map_config_button" = "Configuration";
+"map_legend_title" = "Legend";
+"map_legend_healthy" = "Healthy people";
+"map_legend_not_well" = "People are not feeling well";
+"map_legend_ill" = "People with COVID-19";
+
+"status_title" = "My status";
+"status_info" = "Set your health status so we can notify health authorities and others who have crossed paths with you. This will have to stop the spread of the virus.";
+"status_healthy" = "I am Healthy";
+"status_not_well" = "I am not feeling well";
+"status_ill" = "I have COVID-19";
+"status_exposure" = "Check Exposure";
+"status_exposure_positive_title" = "Attention";
+"status_exposure_positive_message" = "You may have been in close contact with someone who was infected on the following date(s):\n\n";
+"status_exposure_negative_message" = "You have not been in close contact with infected people.";
+
+"configuration_title" = "Configuration";
+"configuration_history" = "Health History";
+"configuration_tracking_on" = "Turn On Tracking";
+"configuration_tracking_off" = "Turn Off Tracking for 8 Hours";
+"configuration_tracking_off_forever" = "Turn Off Tracking Forever";
+"configuration_delete" = "Delete All Tracking Data";
+"configuration_privacy" = "Privacy Policy";
+"configuration_delete_title" = "Delete tracking data";
+"configuration_delete_subtitle" = "Please, confirm the deletion of your movement data for the last 2 weeks";
+
+"history_title" = "History";
+"history_pick_button" = "Pick a date";
+"history_popup" = "Select a date to see\nstatistics for that day";

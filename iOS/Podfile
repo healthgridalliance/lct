@@ -1,0 +1,81 @@
+install! 'cocoapods', :disable_input_output_paths => true
+
+source 'https://github.com/CocoaPods/Specs.git'
+
+platform :ios, '11.0'
+workspace 'HealthGrid'
+
+def debug_pods
+  
+  inhibit_all_warnings!
+  
+  pod 'Sizes', :configurations => ['Debug']
+
+end
+
+def ios_dependencies
+
+  inhibit_all_warnings!
+  use_frameworks!
+  
+  # RxSwift
+  pod 'RxSwift'
+  pod 'RxDataSources'
+  pod 'RxWebKit'
+  pod 'RxFlow'
+  pod 'RxKeyboard'
+  pod 'RxReduce'
+  pod 'RxAlamofire'
+  pod 'RxOptional'
+  
+  # UI pods
+  pod 'SwiftEntryKit'         # Display banners, pop-ups, alerts, etc
+  pod 'Pageboy'               # A simple, highly informative page view controller
+
+  # Utils
+  pod 'SteviaLayout'          # View Layout Library for iOS
+  pod 'Valet'                 # Keychain library
+  pod 'AlamofireImage'        # Image component library for Alamofire
+  pod 'SwiftRichString'       # Elegant & painless Attributed Strings in Swift
+  pod 'ReachabilitySwift'
+
+  # Third party SDK integrations
+  pod 'SwiftLocation'
+
+  # RxCoreData
+  pod 'QueryKit'
+  pod 'RxCoreData'
+  
+  # RxGoogleMaps
+  pod 'RxGoogleMaps'
+  pod 'Google-Maps-iOS-Utils'
+  
+  # Firebase
+  pod 'Firebase/Crashlytics'
+  pod 'Firebase/Analytics'
+  
+end
+
+target 'HealthGrid' do
+  
+  project 'HealthGrid.project'
+
+  # Pods for iOS
+  debug_pods
+  ios_dependencies
+
+end
+
+DEFAULT_SWIFT_VERSION = '4.2'
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    swift_version = DEFAULT_SWIFT_VERSION
+    target.build_configurations.each do |config|
+      config.build_settings['SWIFT_VERSION'] = swift_version
+      if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 10.0
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '10.0'
+      end
+    end
+  end
+end
