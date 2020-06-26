@@ -12,16 +12,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.openar.healthgrid.R
 import com.openar.healthgrid.ui.activity.map.viewmodel.MapsViewModel
 import com.openar.healthgrid.util.OfflineNotificationUtils
-import com.openar.healthgrid.util.PreferenceStorage
 import kotlinx.android.synthetic.main.fragment_privacy_rules.*
 
 
-class PrivacyRulesFragment private constructor(private val viewModel: MapsViewModel): Fragment() {
+class PrivacyRulesFragment : Fragment() {
     private var actionListener: PrivacyRulesFragmentAction? = null
     private var checkBoxStatus: Boolean = false
+    private val viewModel: MapsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,8 +60,8 @@ class PrivacyRulesFragment private constructor(private val viewModel: MapsViewMo
         agree_button.setOnClickListener {
             if (checkBoxStatus && OfflineNotificationUtils.verifyAvailableNetwork(requireContext())) {
                 actionListener?.agreeButtonTapped()
-                PreferenceStorage.addPropertyBoolean(requireContext(), PreferenceStorage.FIRST_LAUNCH, false)
-                viewModel.onFirstAppLaunch()
+                leading.isEnabled = false
+                it.isEnabled = false
             }
         }
         leading.setOnClickListener { actionListener?.navigationBackPressed() }
@@ -87,6 +88,6 @@ class PrivacyRulesFragment private constructor(private val viewModel: MapsViewMo
 
     companion object {
         const val PRIVACY_RULES_TAG = "PRIVACY_RULES_TAG"
-        fun newInstance(viewModel: MapsViewModel): PrivacyRulesFragment = PrivacyRulesFragment(viewModel)
+        fun newInstance(): PrivacyRulesFragment = PrivacyRulesFragment()
     }
 }

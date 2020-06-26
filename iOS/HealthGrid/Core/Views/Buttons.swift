@@ -5,7 +5,7 @@ import RxCocoa
 public enum ButtonStyle {
     case primary(title: String)
     case blue(title: String)
-    case clear(title: String)
+    case clear(title: String, typography: Typography)
     case assetsIcon(name: String, colour: UIColor?, dimension: CGFloat)
 }
 
@@ -118,7 +118,7 @@ open class StyledButton: RippleButton {
             }
             
             setAttributedTitle(title.palette(.custom(colour: titleColor)).typography(.normal(.bold)), for: UIControl.State())
-        case .clear(let title):
+        case .clear(let title, let typography):
             
             backgroundColor = .clear
             setTitleColor(<|.custom(colour: .buttonBlue), for: UIControl.State())
@@ -129,7 +129,7 @@ open class StyledButton: RippleButton {
                 icon.removeFromSuperview()
             }
             
-            setAttributedTitle(title.palette(.custom(colour: .buttonBlue)).typography(.extraSmall(.bold)), for: UIControl.State())
+            setAttributedTitle(title.palette(.custom(colour: .buttonBlue)).typography(typography), for: UIControl.State())
         case .assetsIcon(let name, let color, let dimension):
             backgroundColor = UIColor.clear
             borderColor = UIColor.clear
@@ -465,6 +465,52 @@ class SettingsButton: RippleButton {
         self.buttonHandler?()
     }
     
+}
+
+class BackButton: RippleButton {
+        
+    public var buttonHandler: (() -> Void)?
+    
+    public override init() {
+        super.init()
+        
+        style {
+            $0.backgroundColor = .clear
+            $0.contentHorizontalAlignment = .right
+            $0.addTarget(self, action: #selector(BackButton.didPressButton), for: .touchUpInside)
+            $0.setImage(UIImage(named: "back_btn"), for: .normal)
+            $0.setTitleColor(.main, for: .normal)
+            $0.setTitle("back".localized, for: .normal)
+            $0.titleLabel?.font = Typography.normal(.bold).font()
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateInsets()
+    }
+    
+    private func updateInsets() {
+        centerTextAndImage(spacing: 8)
+    }
+    
+    @objc private func didPressButton(){
+        self.buttonHandler?()
+    }
+    
+}
+
+extension UIButton {
+    func centerTextAndImage(spacing: CGFloat) {
+        let insetAmount = spacing / 2
+        imageEdgeInsets = UIEdgeInsets(top: 0, left: -insetAmount, bottom: 0, right: insetAmount)
+        titleEdgeInsets = UIEdgeInsets(top: 0, left: insetAmount, bottom: 0, right: -insetAmount)
+        contentEdgeInsets = UIEdgeInsets(top: 0, left: insetAmount, bottom: 0, right: insetAmount)
+    }
 }
 
 extension Reactive where Base: StyledButton {

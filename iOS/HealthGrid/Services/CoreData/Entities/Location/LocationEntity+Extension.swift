@@ -13,11 +13,11 @@ extension LocationEntity {
 
 extension LocationEntity: DomainConvertibleType {
     func asDomain() -> Location {
-        return Location(checkInTime: checkInTime ?? Date(),
-                        checkOutTime: checkOutTime ?? Date(),
-                        date: date ?? Date(),
-                        latitude: Double(latitude ?? "0")!,
-                        longitude: Double(longitude ?? "0")!)
+        return Location(checkInTime: checkInTime,
+                        checkOutTime: checkOutTime,
+                        date: date,
+                        latitude: latitude,
+                        longitude: longitude)
     }
 }
 
@@ -29,7 +29,7 @@ extension LocationEntity: Persistable {
 
 extension Location: CoreDataRepresentable {
     internal var uid: Date {
-        return date
+        return date ?? Date()
     }
     
     typealias CoreDataType = LocationEntity
@@ -38,7 +38,7 @@ extension Location: CoreDataRepresentable {
         entity.checkInTime = checkInTime
         entity.checkOutTime = checkOutTime
         entity.date = date
-        entity.latitude = "\(latitude)"
-        entity.longitude = "\(longitude)"
+        entity.latitude = "\(latitude ?? 0)"
+        entity.longitude = "\(longitude ?? 0)"
     }
 }

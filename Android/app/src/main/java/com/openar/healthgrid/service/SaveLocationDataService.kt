@@ -32,7 +32,7 @@ class SaveLocationDataService private constructor() {
             if(lastSavedLocation != null) {
                 if (checkMinDistance(lastSavedLocation, newLocation)) {
                     updateLastObjectCheckOutTime(newLocation.time)
-                    sendLastLocationIfNeeded()
+//                    sendLastLocationIfNeeded()
                     writeToDatabase(createDatabaseObject(newLocation))
                     lastSavedLocation = newLocation
                 }
@@ -71,14 +71,14 @@ class SaveLocationDataService private constructor() {
         locationProvider?.updateLastObjectCheckoutTime(DateUtils.getTimeStamp(time))
     }
 
-    private fun sendLastLocationIfNeeded() {
-        val context = HealthGridApplication.getApplicationContext()
-        val status = PreferenceStorage.getPropertyInt(context, PreferenceStorage.HEALTH_STATUS_VALUE)
-        if (status == R.id.radio_infected) {
-            val locationObject = locationProvider?.getLastObject()
-            locationObject?.let { ApiRequestsRepository().sendLocation(it) }
-        }
-    }
+//    private fun sendLastLocationIfNeeded() {
+//        val context = HealthGridApplication.getApplicationContext()
+//        val status = PreferenceStorage.getPropertyInt(context, PreferenceStorage.HEALTH_STATUS_VALUE)
+//        if (status == R.id.radio_infected) {
+//            val locationObject = locationProvider?.getLastObject()
+//            locationObject?.let { ApiRequestsRepository().sendLocation(it) }
+//        }
+//    }
 
     private fun writeToDatabase(locationObject: LocationInfoEntity) {
         locationProvider?.saveLocation(locationObject)
@@ -91,8 +91,7 @@ class SaveLocationDataService private constructor() {
             checkOutTime?.let { DateUtils.getTimeStamp(it) } ?: "",
             DateUtils.getDate(location.time),
             location.latitude.toString(),
-            location.longitude.toString(),
-            "12345678"
+            location.longitude.toString()
         )
     }
 }

@@ -11,7 +11,7 @@ final class DatesSlider: UIView {
     private let collectionView = DateCollectionView()
     private let selectionView = UIView()
     
-    private let dates = BehaviorRelay<[Date]>(value: Date().lastTwoWeeks())
+    private let dates = BehaviorRelay<[Date]>(value: Date().getLastDays(count: 24))
       
     init() {
         super.init(frame: .zero)
@@ -76,7 +76,7 @@ final class DatesSlider: UIView {
         pickDateButton.style {
             $0.Top == backgroundView.Top
             $0.Bottom == backgroundView.Bottom
-            $0.buttonStyle = .clear(title: "history_pick_button".localized)
+            $0.buttonStyle = .clear(title: "history_pick_button".localized, typography: .extraSmall(.bold))
         }
     }
     

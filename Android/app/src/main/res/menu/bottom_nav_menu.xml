@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/my_status"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_my_status"
+        android:title="@string/infected_string"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/check_exposure"
+        android:enabled="true"
+        android:title="@string/check_exposure"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/configuration"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_configurations"
+        android:title="@string/configuration"
+        app:showAsAction="ifRoom" />
+</menu>

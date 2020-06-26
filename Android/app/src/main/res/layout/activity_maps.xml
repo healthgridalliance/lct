@@ -1,52 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.welcome.WelcomeActivity">
+    tools:context=".ui.activity.map.MapsMainActivity">
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <FrameLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.activity.map.MapsMainActivity" />
+        android:layout_height="match_parent">
 
-    <include layout="@layout/map_action_buttons" />
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.activity.map.MapsMainActivity" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginTop="28dp"
-        android:orientation="horizontal">
+        <include layout="@layout/map_action_buttons" />
 
-        <Button
-            android:id="@+id/status_button"
-            style="@style/BaseAppButton"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="42dp"
-            android:background="@drawable/base_button_box_radius"
-            android:text="@string/my_status" />
+        <include layout="@layout/no_connection_alert" />
 
-        <Button
-            android:id="@+id/configuration_button"
-            style="@style/BaseAppButton"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="42dp"
-            android:background="@drawable/base_button_box_radius"
-            android:text="@string/configuration" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom">
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <include layout="@layout/no_connection_alert" />
-</FrameLayout>
+                <com.google.android.material.bottomnavigation.BottomNavigationView
+                    android:id="@+id/bottom_navigation"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginTop="23dp"
+                    android:background="@color/colorPrimary"
+                    android:clipChildren="false"
+                    android:measureAllChildren="false"
+                    app:itemBackground="@color/colorPrimary"
+                    app:itemIconTint="@color/base_color"
+                    app:itemTextColor="@color/base_color"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:menu="@menu/bottom_nav_menu" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/check_exposure_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/check_exposure_button"
+                android:scaleType="centerInside"
+                app:layout_constraintBottom_toBottomOf="@id/bottom_navigation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </FrameLayout>
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

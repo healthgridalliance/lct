@@ -1,6 +1,7 @@
 import UIKit
 import Stevia
 import SwiftEntryKit
+import SwiftyUserDefaults
 
 public class MapLegendPopup: UIView {
 
@@ -49,9 +50,8 @@ public class MapLegendPopup: UIView {
             $0.axis = .vertical
         }
 
-        [MapLegend(type: .healthy),
-         MapLegend(type: .notWell),
-         MapLegend(type: .ill)]
+        [MapLegend(type: .high),
+         MapLegend(type: .low)]
             .forEach {
                 legendStackView.addArrangedSubview($0)
         }
@@ -60,23 +60,20 @@ public class MapLegendPopup: UIView {
 }
 
 enum MapLegendType {
-    case healthy
-    case notWell
-    case ill
+    case high
+    case low
     
     var color: UIColor {
         switch self {
-        case .healthy: return UIColor.legendGreen
-        case .notWell: return UIColor.legendYellow
-        case .ill: return UIColor.legendRed
+        case .high: return UIColor(hexString: Defaults[\.maxColor])
+        case .low: return UIColor(hexString: Defaults[\.minColor])
         }
     }
     
     var title: String {
         switch self {
-        case .healthy: return "map_legend_healthy".localized
-        case .notWell: return "map_legend_not_well".localized
-        case .ill: return "map_legend_ill".localized
+        case .high: return "map_legend_hight".localized
+        case .low: return "map_legend_low".localized
         }
     }
 }

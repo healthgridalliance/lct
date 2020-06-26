@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.openar.healthgrid.R
-import com.openar.healthgrid.ui.activity.map.dialog.HistoryBottomSheetDialog
+import com.openar.healthgrid.ui.activity.map.dialog.bottomsheet.HistoryBottomSheetDialog
 import com.openar.healthgrid.ui.activity.map.viewmodel.HistoryViewModel
 
 class DateListAdapter(

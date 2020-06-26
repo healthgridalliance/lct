@@ -59,7 +59,7 @@
             android:id="@+id/agree_button"
             style="@style/BaseAppButton"
             android:layout_marginTop="15dp"
-            android:layout_marginBottom="42dp"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/inactive_base_button_box_radius"
             android:enabled="false"
             android:text="@string/btn_track_location_text" />

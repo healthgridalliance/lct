@@ -10,7 +10,6 @@ import com.openar.healthgrid.ui.activity.NetworkBroadcastReceiver
 import com.openar.healthgrid.util.OfflineNotificationUtils
 import kotlinx.android.synthetic.main.no_connection_alert.*
 
-
 abstract class NetworkActivity : BaseActivity() {
     private lateinit var networkBroadcastReceiver: NetworkBroadcastReceiver
     protected var hasNetworkConnection: Boolean = true

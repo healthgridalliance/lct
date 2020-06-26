@@ -8,6 +8,7 @@ protocol APIRequest {
     var method: RequestType { get }
     var path: String { get }
     var parameters: [RequestKey : String] { get }
+    var body: Data? { get }
 }
 
 extension APIRequest {
@@ -28,7 +29,18 @@ extension APIRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = body
+        
         return request
     }
     
+}
+
+extension Encodable {
+    func encode() throws -> Data {
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.dateEncodingStrategy = .iso8601
+        return try jsonEncoder.encode(self)
+    }
 }

@@ -6,6 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApproovServiceBuilder {
+//    const val BASE_URL = "http://192.168.15.30:8080/"
     const val BASE_URL = "https://swaggerui.healthgridalliance.org/"
 
     @JvmStatic

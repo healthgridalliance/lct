@@ -16,11 +16,12 @@ import androidx.work.WorkerParameters
 import com.google.android.gms.location.*
 import com.google.common.util.concurrent.ListenableFuture
 import com.openar.healthgrid.Constants
-import com.openar.healthgrid.ui.activity.map.dialog.ConfigurationBottomSheetDialog
+import com.openar.healthgrid.ui.activity.map.dialog.bottomsheet.ConfigurationBottomSheetDialog
 import com.openar.healthgrid.util.PreferenceStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
+
 
 class BackgroundLocationWork(private val context: Context, workerParams: WorkerParameters)
     : ListenableWorker(context, workerParams) {
@@ -34,7 +35,8 @@ class BackgroundLocationWork(private val context: Context, workerParams: WorkerP
         return CallbackToFutureAdapter.getFuture { completer ->
             localBroadcastManager = LocalBroadcastManager.getInstance(context)
             broadcastReceiver = StopWorkBroadcastReceiver()
-            localBroadcastManager.registerReceiver(broadcastReceiver, IntentFilter(ConfigurationBottomSheetDialog.STOP_LOCATION))
+            localBroadcastManager.registerReceiver(broadcastReceiver, IntentFilter(
+                ConfigurationBottomSheetDialog.STOP_LOCATION))
                 doWork(completer)
         }
     }

@@ -80,7 +80,7 @@ class StartJourneyFragment : Fragment() {
         welcomeViewPager.setPageTransformer(false, WelcomeViewTransformation())
         infoPagerAdapter = InfoPagerAdapter(childFragmentManager)
         welcomeViewPager.adapter = infoPagerAdapter
-        pageChangeListener = ViewPagerListener(this)
+        pageChangeListener = ViewPagerListener()
         welcomeViewPager.addOnPageChangeListener(pageChangeListener)
         welcomeViewPager.currentItem = if (isLastPage) imageArray.length() - 1 else 0
     }
@@ -102,7 +102,7 @@ class StartJourneyFragment : Fragment() {
         override fun getCount(): Int = imageArray.length()
     }
 
-    inner class ViewPagerListener(private val fragment: StartJourneyFragment) :
+    inner class ViewPagerListener :
         OnPageChangeListener {
         private val middlePosition = 0.5f
         private var prevPositionOffset: Float = 0f

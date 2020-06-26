@@ -2,17 +2,28 @@ import Foundation
 import RxFlow
 import RxSwift
 import RxCocoa
+import SwiftyUserDefaults
 
 public final class PrivacyViewModel: AppStepper {
     
     func bind(input: Input) -> Output {
         let agreeBinding = input.agreeEvent?
-            .drive(onNext: { [weak self] in
-                guard let self = self else { return }
-                let firstLaunch = FirstLaunch(userDefaults: .standard, key: UserDefaults.wasLaunchedBeforeKey)
-                firstLaunch.wasLaunchedBefore = true
+            .drive(onNext: {LocationTracker.shared.requestPermission()})
+        
+        let locationPermissionBinding = LocationTracker.shared.state.subscribe(onNext: { [weak self] state in
+            guard let self = self else { return }
+            
+            switch state {
+            case .available:
+                self.steps.accept(PrivacySteps.checkExposure)
+            case .undetermined: break
+            case .denied, .restricted, .disabled:
                 self.steps.accept(PrivacySteps.agreed)
-            })
+            }
+            
+            Defaults[\.firstLaunch] = false
+        })
+        
         let closeEventBinding = input.closeEvent?.drive(onNext: { [weak self] in
             guard let self = self else { return }
             self.steps.accept(PrivacySteps.close)
@@ -24,6 +35,7 @@ public final class PrivacyViewModel: AppStepper {
         return Output(
             disposable: Disposables.create([
                 agreeBinding,
+                locationPermissionBinding,
                 closeEventBinding,
                 backEventBinding
                 ].compactMap({$0}))

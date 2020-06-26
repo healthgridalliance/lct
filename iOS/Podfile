@@ -38,6 +38,8 @@ def ios_dependencies
   pod 'AlamofireImage'        # Image component library for Alamofire
   pod 'SwiftRichString'       # Elegant & painless Attributed Strings in Swift
   pod 'ReachabilitySwift'
+  pod 'SwiftyUserDefaults'
+  pod 'ObjectMapper'
 
   # Third party SDK integrations
   pod 'SwiftLocation'

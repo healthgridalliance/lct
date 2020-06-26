@@ -10,8 +10,8 @@ final class MapDataSource {
 
 extension MapDataSource: MapDataSourceProtocol {
     
-    func registerApp() -> Observable<BaseResponse> {
-        let request = MapRequest.registerApp
+    func getInitialParameters() -> Observable<InitialResponse> {
+        let request = InitialRequest.parameters
         return apiClient
             .send(apiRequest: request)
             .observeOn(MainScheduler.instance)
@@ -19,7 +19,7 @@ extension MapDataSource: MapDataSourceProtocol {
     }
     
     func getLocationsData() -> Observable<LocationResponse> {
-        let request = MapRequest.getData
+        let request = HeatZonesRequest.heatzone(date: Date())
         return apiClient
             .send(apiRequest: request)
             .observeOn(MainScheduler.instance)
@@ -27,7 +27,15 @@ extension MapDataSource: MapDataSourceProtocol {
     }
     
     func deleteLocationsData() -> Observable<BaseResponse> {
-        let request = MapRequest.deleteData
+        let request = LocationHistoryRequest.deleteLocations
+        return apiClient
+            .send(apiRequest: request)
+            .observeOn(MainScheduler.instance)
+            .share(replay: 1)
+    }
+    
+    func checkExposure(date: Date) -> Observable<LocationResponse> {
+        let request = HeatZonesRequest.heatzone(date: date)
         return apiClient
             .send(apiRequest: request)
             .observeOn(MainScheduler.instance)

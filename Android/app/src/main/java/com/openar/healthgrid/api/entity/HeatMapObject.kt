@@ -3,15 +3,14 @@ package com.openar.healthgrid.api.entity
 import com.google.gson.annotations.SerializedName
 
 data class HeatMapObject (
-    @SerializedName("Date")
+    @SerializedName("result")
+    var data: HeatMapData? = null
+)
+
+data class HeatMapData (
+    @SerializedName("date")
     var date: String? = null,
 
-    @SerializedName("MinColor")
-    var minColor: String? = null,
-
-    @SerializedName("MaxColor")
-    var maxColor: String? = null,
-
-    @SerializedName("LatLng")
-    var points: List<LatLng>? = null
+    @SerializedName("latLongs")
+    var points: List<CustomLatLng>? = null
 )

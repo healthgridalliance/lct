@@ -22,6 +22,7 @@ import android.util.Log
 import com.criticalblue.approovsdk.Approov
 import com.criticalblue.approovsdk.Approov.TokenFetchCallback
 import com.criticalblue.approovsdk.Approov.TokenFetchResult
+import com.openar.healthgrid.api.HealthGridService
 import com.openar.healthgrid.api.HealthGridServiceApi
 import com.openar.healthgrid.api.approov.ApproovServiceBuilder.BASE_URL
 import com.openar.healthgrid.util.FileReadUtils
@@ -296,21 +297,7 @@ internal class ApproovTokenInterceptor
     ): Request {
         // we successfully obtained a token so add it to the header for the request
         var updatedRequest = request
-        val urlString: String = updatedRequest.url.toString().removePrefix(BASE_URL).split("?")[0]
-        var url: HttpUrl = updatedRequest.url
-        when (urlString) {
-            HealthGridServiceApi.REGISTRATION, HealthGridServiceApi.STATUS_CHANGING -> url =
-                updatedRequest.url
-                    .newBuilder()
-                    .addEncodedQueryParameter("applicationId", loggableTokenObject.deviceId)
-                    .build()
-            HealthGridServiceApi.DATA_DELETION -> url =
-                updatedRequest.url
-                    .newBuilder()
-                    .addPathSegment(loggableTokenObject.deviceId ?: "")
-                    .build()
-        }
-
+        val url: HttpUrl = updatedRequest.url
         updatedRequest = updatedRequest.newBuilder()
             .header(APPROOV_HEADER, APPROOV_TOKEN_PREFIX + approovResults.token)
             .url(url)
@@ -322,8 +309,9 @@ internal class ApproovTokenInterceptor
         // logging tag
         private const val TAG = "ApproovInterceptor"
         // header that will be added to Approov enabled requests
-        private const val APPROOV_HEADER = "Approov-Token"
+//        private const val APPROOV_HEADER = "Approov-Token"
+        private const val APPROOV_HEADER = "Authorization"
         // any prefix to be added before the Approov token, such as "Bearer "
-        private const val APPROOV_TOKEN_PREFIX = ""
+        private const val APPROOV_TOKEN_PREFIX = "Bearer "
     }
 }

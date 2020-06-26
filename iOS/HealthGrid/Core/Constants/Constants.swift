@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import CoreLocation
 
 public enum BaseURL: String {
@@ -7,11 +8,17 @@ public enum BaseURL: String {
 }
 
 public enum RequestKey: String {
-    case applicationId
-    case infected
-    case history
+    case testUniqueId
+    case locationHistory
+    case date
     case latitude
     case longitude
 }
 
-public let minDistanceToBeInfected: CLLocationDistance = 50
+public var topOffset: CGFloat {
+    if #available(iOS 13.0, *) {
+        return 30
+    } else {
+        return 50
+    }
+}

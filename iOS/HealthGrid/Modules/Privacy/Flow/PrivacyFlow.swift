@@ -33,7 +33,19 @@ public class PrivacyFlow: Flow {
         case .agreed:
             self.viewController.navigationController?.dismiss(animated: true, completion: nil)
             return .end(forwardToParentFlowWithStep: step)
+        case .checkExposure: return showCheckExposure()
         }
+    }
+    
+    private func showCheckExposure() -> FlowContributors {
+        let dataSource = CheckExposureDataSource()
+        let flow = CheckExposureFlow(dataSource: dataSource)
+        Flows.use(flow, when: .ready) {  [unowned self] (root: UINavigationController) in
+            root.setNavigationBarHidden(true, animated: false)
+            self.viewController.present(root, animated: true, presentationStyle: .fullScreen)
+        }
+        return .one(flowContributor: .contribute(withNextPresentable: flow,
+                                                 withNextStepper: OneStepper(withSingleStep: CheckExposureSteps.checkExposure)))
     }
     
 }

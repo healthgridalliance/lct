@@ -14,8 +14,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return app.launch(with: self.window)
     }
     
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        LocationTracker.shared.lastLocation.accept(nil)
-    }
-    
 }

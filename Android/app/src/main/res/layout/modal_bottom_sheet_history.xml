@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/map_action_button_radius"
-            tools:context=".ui.activity.map.dialog.HistoryBottomSheetDialog" />
+            tools:context=".ui.activity.map.dialog.bottomsheet.HistoryBottomSheetDialog" />
 
         <LinearLayout
             android:layout_width="match_parent"

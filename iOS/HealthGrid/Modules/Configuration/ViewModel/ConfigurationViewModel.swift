@@ -64,7 +64,7 @@ public final class ConfigurationViewModel: AppStepper {
             guard let self = self else { return }
             switch value {
             case .history:
-                if let _ = LocationTracker.shared.lastLocation.value {
+                if LocationTracker.shared.isLocationEnabled.value {
                     SwiftEntryKit.dismiss {
                         self.steps.accept(ConfigurationSteps.history)
                     }

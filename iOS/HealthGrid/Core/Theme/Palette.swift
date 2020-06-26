@@ -7,6 +7,9 @@ extension UIColor {
     public static let buttonBlue = #colorLiteral(red: 0.2352941176, green: 0.7098039216, blue: 0.8980392157, alpha: 1)
     public static let buttonGray = #colorLiteral(red: 0.1647058824, green: 0.1764705882, blue: 0.2039215686, alpha: 0.5)
     public static let separator = #colorLiteral(red: 0.8039215686, green: 0.8078431373, blue: 0.8235294118, alpha: 1)
+    public static let cellSeparator = #colorLiteral(red: 0.7764705882, green: 0.7764705882, blue: 0.7764705882, alpha: 0.5)
+    public static let pinCodeContainer = #colorLiteral(red: 0.9333333333, green: 0.9333333333, blue: 0.9333333333, alpha: 1)
+    public static let pinCodeShadow = #colorLiteral(red: 0.1490196078, green: 0.1960784314, blue: 0.2196078431, alpha: 0.08)
     
     public static let legendGreen = #colorLiteral(red: 0.4117647059, green: 0.6784313725, blue: 0.5176470588, alpha: 1)
     public static let legendYellow = #colorLiteral(red: 0.9647058824, green: 0.7176470588, blue: 0.4235294118, alpha: 1)

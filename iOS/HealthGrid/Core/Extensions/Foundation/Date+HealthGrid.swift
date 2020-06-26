@@ -26,6 +26,14 @@ extension DateFormatter {
         return formatter
     }
     
+    public static var serverDateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Calendar.deviceCalendar.locale
+        formatter.timeZone = TimeZone(identifier: "UTC")
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }
+    
 }
 
 extension Calendar {
@@ -60,9 +68,9 @@ extension Calendar {
 
 extension Date {
     
-    func lastTwoWeeks() -> [Date] {
+    func getLastDays(count: Int) -> [Date] {
         var dates: [Date] = []
-        guard var date = Calendar.deviceCalendar.date(byAdding: .day, value: -24, to: self) else { return [] }
+        guard var date = Calendar.deviceCalendar.date(byAdding: .day, value: -count, to: self) else { return [] }
 
         while date <= Date() {
             dates.append(date)
@@ -70,10 +78,6 @@ extension Date {
             date = newDate
         }
         return dates
-    }
-    
-    func lastTwoWeekDay() -> Date {
-        return Calendar.deviceCalendar.date(byAdding: .day, value: -14, to: self) ?? Date()
     }
     
     var day: Int {

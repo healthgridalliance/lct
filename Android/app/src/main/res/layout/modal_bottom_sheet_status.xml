@@ -34,6 +34,7 @@
             android:id="@+id/radio_group_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/bottom_sheet_bottom_padding"
             android:orientation="vertical">
 
             <RadioButton
@@ -43,20 +44,9 @@
                 android:text="@string/healthy_string" />
 
             <RadioButton
-                android:id="@+id/radio_not_well"
-                style="@style/BottomSheetRadioButton"
-                android:text="@string/not_feeling_well_string" />
-
-            <RadioButton
                 android:id="@+id/radio_infected"
                 style="@style/BottomSheetRadioButton"
                 android:text="@string/infected_string" />
         </RadioGroup>
-
-        <TextView
-            android:id="@+id/check_exposure"
-            style="@style/BottomSheetTextLine"
-            android:layout_marginBottom="@dimen/bottom_sheet_bottom_padding"
-            android:text="@string/check_exposure" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

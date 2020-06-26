@@ -3,5 +3,5 @@ import RxCocoa
 import RxSwift
 
 public protocol HistoryDataSourceProtocol: class {
-    func getHistory() -> Observable<LocationResponse>
+    func getHistory(date: Date) -> Observable<LocationResponse>
 }

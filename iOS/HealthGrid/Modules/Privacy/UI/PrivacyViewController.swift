@@ -13,7 +13,7 @@ public enum PrivacyViewControllerType {
 final class PrivacyViewController: UIViewController {
     
     private let containerView = UIView()
-    private let backButton = StyledButton()
+    private let backButton = BackButton()
     private let titleLabel = UILabel()
     private let webView = WKWebView()
     private let bottomView = UIView()
@@ -55,9 +55,9 @@ final class PrivacyViewController: UIViewController {
             containerView.Bottom == guide.bottom + 16
             containerView.left(0).right(0)
             
-            containerView.sv(backButton, titleLabel, webView, bottomView)
+            containerView.sv(backButton, webView, bottomView)
                 .layout(6,
-                        |-8-backButton.size(34)-0-titleLabel-16-|,
+                        |-0-backButton.width(76).height(34),
                         0,
                         |-16-webView-16-|,
                         0,
@@ -99,15 +99,6 @@ final class PrivacyViewController: UIViewController {
         case .onboarding:
             view.style {
                 $0.backgroundColor = .white
-            }
-            backButton.style {
-                $0.buttonStyle = .assetsIcon(name: "back_btn", colour: UIColor.main, dimension: 17)
-            }
-            titleLabel.style {
-                $0.text = "back".localized
-                $0.textColor = Palette.main.color()
-                $0.font = Typography.large(.bold).font()
-                $0.numberOfLines = 0
             }
             separatorView.style {
                 $0.backgroundColor = Palette.main.color().withAlphaComponent(0.2)

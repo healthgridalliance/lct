@@ -23,18 +23,15 @@
     <integer-array name="legend_icons">
         <item>@drawable/legend_circle</item>
         <item>@drawable/legend_circle</item>
-        <item>@drawable/legend_circle</item>
     </integer-array>
 
     <string-array name="legend_text_lines">
-        <item>@string/legend_healthy</item>
-        <item>@string/legend_not_feeling_well</item>
-        <item>@string/legend_infected</item>
+        <item>@string/legend_high_density</item>
+        <item>@string/legend_low_density</item>
     </string-array>
 
     <integer-array name="legend_icon_colors">
-        <item>@color/legend_healthy_color</item>
-        <item>@color/legend_not_feeling_well_color</item>
-        <item>@color/legend_infected_color</item>
+        <item>@color/max_color</item>
+        <item>@color/min_color</item>
     </integer-array>
 </resources>

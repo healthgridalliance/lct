@@ -57,7 +57,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="42dp"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/base_button_box_radius"
             android:text="@string/start_journey" />
     </LinearLayout>

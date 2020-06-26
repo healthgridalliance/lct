@@ -874,9 +874,9 @@ class ApproovSDK {
     /* Initial configuration file extention for Approov SDK */
     public static let kConfigFileExtension = "config"
     /* Approov token default header */
-    private static let kApproovTokenHeader = "Approov-Token"
+    private static let kApproovTokenHeader = "Authorization"
     /* Approov token custom prefix: any prefix to be added such as "Bearer " */
-    private static var approovTokenPrefix = ""
+    private static var approovTokenPrefix = "Bearer "
     /* Private initializer */
     fileprivate init(){}
     /* Status of Approov SDK initialisation */
@@ -1019,23 +1019,6 @@ class ApproovSDK {
         let approovResult = Approov.fetchTokenAndWait(request.url!.absoluteString)
         // Log result of token fetch
         NSLog("Approov: Approov token for host: %@ : %@", request.url!.absoluteString, approovResult.loggableToken())
-        
-        // Add loggableToken "did" as applicationId query to request
-        if var url = request.url?.absoluteString {
-            if let data = approovResult.loggableToken().data(using: .utf8) {
-                do {
-                    if let approovResultDictionary = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                        let applicationId = approovResultDictionary["did"] as? String {
-                        url.append("&\(RequestKey.applicationId)=\(applicationId)")
-                        returnData.request.url = URL(string: url)
-                    }
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
-        print("==================================================")
-        print("Request: \(returnData.request)")
         
         if approovResult.isConfigChanged {
             // Store dynamic config file if a change has occurred

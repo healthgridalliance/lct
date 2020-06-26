@@ -3,6 +3,7 @@ import CoreLocation
 import SwiftLocation
 import RxCocoa
 import RxSwift
+import SwiftyUserDefaults
 
 public final class LocationTracker: NSObject, HasDisposeBag {
     
@@ -11,20 +12,23 @@ public final class LocationTracker: NSObject, HasDisposeBag {
     public var lastLocation = BehaviorRelay<CLLocation?>(value: nil)
     public var state = BehaviorRelay<LocationManager.State>(value: .denied)
     
+    public var isLocationEnabled = BehaviorRelay<Bool>(value: false)
+        
     private let locator = LocationManager.shared
     private let database = UseCaseProvider().makeLocationsUseCase()
-    private var locationStatusToSet: LocationStatusState? = nil
+    private var locationStatusToSet: LocationStatus? = nil
     
     private var timer: Timer?
     
-    public private(set) var locationStatus: LocationStatusState {
+    public private(set) var locationStatus: LocationStatus {
         get {
-            return LocationStatus(key: UserDefaults.locationStatusKey).status
+            guard LocationManager.state == .available else { return .disabled }
+            return Defaults[\.locationStatus]
         }
         set {
             locationStatusToSet = nil
             setLocationUpdateTimer(for: newValue)
-            LocationStatus(key: UserDefaults.locationStatusKey).status = newValue
+            Defaults[\.locationStatus] = newValue
         }
     }
     private var currentLocationRequest: LocationRequest?
@@ -34,7 +38,7 @@ public final class LocationTracker: NSObject, HasDisposeBag {
         }
     }
     
-    private var accuracy: LocationManager.Accuracy = .city {
+    private var accuracy: LocationManager.Accuracy = .any {
         didSet {
         }
     }
@@ -64,6 +68,18 @@ public final class LocationTracker: NSObject, HasDisposeBag {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.setLocationUpdateTimer(for: self.locationStatus)
         }
+        
+        setupBindings()
+    }
+    
+    private func setupBindings() {
+        let locationEnabledBinding = Observable.combineLatest(lastLocation, state)
+            .map({$0 != nil && $1 == .available})
+            .bind(to: isLocationEnabled)
+        
+        disposeBag.insert(
+            locationEnabledBinding
+        )
     }
     
     private func setState(_ state: LocationManager.State) {
@@ -72,15 +88,19 @@ public final class LocationTracker: NSObject, HasDisposeBag {
             if let locationStatusToSet = locationStatusToSet {
                 locationStatus = locationStatusToSet
                 self.locationStatusToSet = nil
-            } else {
+            } else if locationStatus == .undefined {
                 locationStatus = .on
             }
             self.requestLocation()
-        default:
-            lastLocation.accept(nil)
+        case .undetermined, .denied, .restricted:
+            locationStatus = .undefined
+        case .disabled:
             locationStatus = .disabled
         }
-        self.state.accept(state)
+        if self.state.value != state {
+            lastLocation.accept(nil)
+            self.state.accept(state)
+        }
     }
     
     private func requestLocation() {
@@ -98,8 +118,8 @@ public final class LocationTracker: NSObject, HasDisposeBag {
                             guard let self = self else { return }
                             switch result {
                             case .success(let location):
-                                self.lastLocation.accept(location)
                                 if self.locationStatus == .on {
+                                    guard self.isValid(location: location) else { return }
                                     self.database
                                         .save(location: Location(from: location))
                                         .take(1)
@@ -108,6 +128,7 @@ public final class LocationTracker: NSObject, HasDisposeBag {
                                 } else {
                                     self.currentLocationRequest?.pause()
                                 }
+                                self.lastLocation.accept(location)
                             case .failure(let error):
                                 print(error.localizedDescription)
                             }
@@ -115,11 +136,16 @@ public final class LocationTracker: NSObject, HasDisposeBag {
     }
     
     public func requestPermission() {
-        switch LocationManager.state {
-        case .available: setState(.available)
+        let state = LocationManager.state
+        switch state {
+        case .available:
+            if lastLocation.value == nil {
+                showLocationPopup()
+            }
         case .undetermined: locator.requireUserAuthorization(.always)
         case .denied, .restricted, .disabled: showLocationSettingsPopup()
         }
+        setState(state)
     }
     
     public func startTracking() -> Observable<Bool> {
@@ -166,7 +192,18 @@ public final class LocationTracker: NSObject, HasDisposeBag {
     }
     
     public func deleteAllData() -> Observable<Void> {
-        return database.deleteAll().take(1).asObservable()
+        guard let lastLocation = lastLocation.value else {
+            return database.deleteAll().take(1).asObservable()
+        }
+        return database
+            .deleteAll()
+            .take(1)
+            .flatMap({self.database
+                .save(location: Location(from: lastLocation))
+                .take(1)
+            })
+            .asObservable()
+        
     }
     
     public func getAllData() -> Observable<[Location]> {
@@ -177,9 +214,13 @@ public final class LocationTracker: NSObject, HasDisposeBag {
         return Observable.create { observer -> Disposable in
             var infectedDates: [Date] = []
             if let heatzones = heatzones {
-                userLocations.forEach { location in
-                    let exposureLocations = heatzones.filter({$0.location.distance(from: location.location) < minDistanceToBeInfected})
-                    infectedDates.append(contentsOf: exposureLocations.map({$0.date}))
+                userLocations
+                    .compactMap({$0.location != nil ? $0 : nil})
+                    .forEach { location in
+                        let exposureLocations = heatzones
+                            .compactMap({$0.location != nil ? $0 : nil})
+                            .filter({$0.location!.distance(from: location.location!) < Defaults[\.exposureDistance]})
+                        infectedDates.append(contentsOf: exposureLocations.compactMap({$0.date}))
                 }
             }
             let dates = Set(infectedDates.sorted().map({DateFormatter.exposureDateFormatter.string(from: $0)})).map({$0})
@@ -193,11 +234,11 @@ public final class LocationTracker: NSObject, HasDisposeBag {
 
 extension LocationTracker {
     
-    private func setLocationUpdateTimer(for status: LocationStatusState) {
+    private func setLocationUpdateTimer(for status: LocationStatus) {
         guard status == .off else {
             timer?.invalidate()
             timer = nil
-            LocationUpdateDate(key: UserDefaults.locationUpdateDateKey).date = nil
+            Defaults[\.locationUpdateDate] = nil
             return
         }
         
@@ -214,7 +255,7 @@ extension LocationTracker {
         }
         
         var dateToFire: Date
-        if let locationUpdateDate = LocationUpdateDate(key: UserDefaults.locationUpdateDateKey).date {
+        if let locationUpdateDate = Defaults[\.locationUpdateDate] {
             if Date() < locationUpdateDate {
                 dateToFire = locationUpdateDate
             } else {
@@ -223,7 +264,7 @@ extension LocationTracker {
             }
         } else {
             dateToFire = Date.dateToUpdateLocation
-            LocationUpdateDate(key: UserDefaults.locationUpdateDateKey).date = dateToFire
+            Defaults[\.locationUpdateDate] = dateToFire
         }
         
         timer = Timer(fire: dateToFire, interval: 0, repeats: false) { [startLocationUpdate] _ in
@@ -234,9 +275,14 @@ extension LocationTracker {
         }
     }
     
+    private func isValid(location: CLLocation) -> Bool {
+        guard let lastLocation = lastLocation.value else { return true }
+        return location.distance(from: lastLocation) >= distance
+    }
+    
     private func showLocationSettingsPopup() {
-        let alertController = UIAlertController(title: "location_popup_title".localized,
-                                                message: "location_popup_message".localized,
+        let alertController = UIAlertController(title: "location_settings_popup_title".localized,
+                                                message: "location_settings_popup_message".localized,
                                                 preferredStyle: .alert)
 
         let cancelAction = UIAlertAction(title: "cancel".localized, style: .default, handler: { [weak self] _ in
@@ -245,12 +291,23 @@ extension LocationTracker {
         })
         alertController.addAction(cancelAction)
         
-        let settingsAction = UIAlertAction(title: "location_popup_settings".localized, style: .default, handler: { _ in
+        let settingsAction = UIAlertAction(title: "location_settings_popup_settings".localized, style: .default, handler: { _ in
             if let url = URL(string:UIApplication.openSettingsURLString) {
                 UIApplication.shared.open(url)
             }
         })
         alertController.addAction(settingsAction)
+                
+        UIApplication.shared.windows.last?.rootViewController?.present(alertController, animated: true, completion: nil)
+    }
+    
+    private func showLocationPopup() {
+        let alertController = UIAlertController(title: "location_popup_title".localized,
+                                                message: "location_popup_message".localized,
+                                                preferredStyle: .alert)
+
+        let cancelAction = UIAlertAction(title: "cancel".localized, style: .default, handler: nil)
+        alertController.addAction(cancelAction)
                 
         UIApplication.shared.windows.last?.rootViewController?.present(alertController, animated: true, completion: nil)
     }

@@ -34,7 +34,7 @@ object DateUtils {
     fun getDateDaysBefore(days: Int): String {
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DAY_OF_YEAR, -days)
-        return getDate(calendar.timeInMillis)
+        return convertTimeSinceEpochToDate(calendar.timeInMillis, "yyyy-MM-dd")
     }
 
     private fun convertTimeSinceEpochToDate(time: Long, pattern: String): String {

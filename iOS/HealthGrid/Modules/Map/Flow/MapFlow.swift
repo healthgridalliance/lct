@@ -36,32 +36,31 @@ public class MapFlow: Flow {
         if case HistorySteps.close = step {
             return navigate(to: MapSteps.configuration(delayed: true))
         }
-        if case MyStatusSteps.exposurePopup(let dates) = step {
-            return showExposurePopup(with: dates)
-        }
-        if case MyStatusSteps.requestPermission = step {
+        if case CheckExposureSteps.requestPermission = step {
             return navigate(to: MapSteps.requestPermission)
         }
         
         guard let step = step as? MapSteps else { return .none }
         
         switch step {
-        case .myStatus: return showMyStatus()
+        case .diagnosis: return showDiagnosis()
         case .configuration: return showConfiguration()
         case .legend: return showLegendPopup()
         case .requestPermission: return showRequestPermissionPopup()
+        case .checkExposure: return showCheckExposure()
+        case .exposureResults(let dates): return showExposureResults(dates: dates)
         }
     }
     
-    private func showMyStatus() -> FlowContributors {
-        let attributes = EKAttributes.controllerDefaultDisplayAttributes
-        
-        let dataSource = MyStatusDataSource()
-        let viewModel = MyStatusViewModel(dataSource: dataSource)
-        let flow = MyStatusFlow(viewModel: viewModel)
-        
-        SwiftEntryKit.display(entry: flow.viewController, using: attributes)
-        return .one(flowContributor: .contribute(withNextPresentable: flow, withNextStepper: viewModel))
+    private func showDiagnosis() -> FlowContributors {
+        let dataSource = DiagnosisDataSource()
+        let flow = DiagnosisFlow(dataSource: dataSource)
+        Flows.use(flow, when: .ready) {  [unowned self] (root: UINavigationController) in
+            root.setNavigationBarHidden(true, animated: false)
+            self.viewController.present(root, animated: true, completion: nil)
+        }
+        return .one(flowContributor: .contribute(withNextPresentable: flow,
+                                                 withNextStepper: OneStepper(withSingleStep: DiagnosisSteps.notify)))
     }
     
     private func showConfiguration(delayed: Bool = false) -> FlowContributors {
@@ -70,7 +69,8 @@ public class MapFlow: Flow {
         let viewModel = ConfigurationViewModel()
         let flow = ConfigurationFlow(viewModel: viewModel)
         
-        let delay = delayed ? 0.3 : 0
+        // Delaying controller presenting on 0.1 sec is necessary for airplay mirroring
+        let delay = delayed ? 0.3 : 0.1
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
            SwiftEntryKit.display(entry: flow.viewController, using: attributes)
         }
@@ -115,32 +115,31 @@ public class MapFlow: Flow {
         return .one(flowContributor: .contribute(withNextPresentable: flow, withNextStepper: viewModel))
     }
     
-    private func showExposurePopup(with dates: [String]) -> FlowContributors {
-        if dates.isEmpty {
-            let alert = UIAlertController(title: "",
-                                          message: "status_exposure_negative_message".localized,
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "ok".localized, style: .default, handler: nil))
-            self.viewController.present(alert, animated: true)
-        } else {
-            let alert = UIAlertController(title: "status_exposure_positive_title".localized,
-                                          message: nil,
-                                          preferredStyle: .alert)
-            let attributedMessage = NSMutableAttributedString(string: "status_exposure_positive_message".localized,
-                                                              attributes: [.font: UIFont.systemFont(ofSize: 13)])
-            attributedMessage.append(NSAttributedString(string: dates.map({"· " + $0}).joined(separator: "\n"),
-                                                        attributes: [.font: UIFont.boldSystemFont(ofSize: 13)]))
-            alert.setValue(attributedMessage, forKey: "attributedMessage")
-            
-            alert.addAction(UIAlertAction(title: "ok".localized, style: .default, handler: nil))
-            self.viewController.present(alert, animated: true)
-        }
-        return .none
-    }
-    
     private func showRequestPermissionPopup() -> FlowContributors {
         LocationTracker.shared.requestPermission()
         return .none
+    }
+    
+    private func showCheckExposure() -> FlowContributors {
+        let dataSource = CheckExposureDataSource()
+        let flow = CheckExposureFlow(dataSource: dataSource)
+        Flows.use(flow, when: .ready) {  [unowned self] (root: UINavigationController) in
+            root.setNavigationBarHidden(true, animated: false)
+            self.viewController.present(root, animated: true, presentationStyle: .fullScreen)
+        }
+        return .one(flowContributor: .contribute(withNextPresentable: flow,
+                                                 withNextStepper: OneStepper(withSingleStep: CheckExposureSteps.checkExposure)))
+    }
+    
+    private func showExposureResults(dates: [String]) -> FlowContributors {
+        let dataSource = CheckExposureDataSource()
+        let flow = CheckExposureFlow(dataSource: dataSource)
+        Flows.use(flow, when: .ready) {  [unowned self] (root: UINavigationController) in
+            root.setNavigationBarHidden(true, animated: false)
+            self.viewController.present(root, animated: true, presentationStyle: .fullScreen)
+        }
+        return .one(flowContributor: .contribute(withNextPresentable: flow,
+                                                 withNextStepper: OneStepper(withSingleStep: CheckExposureSteps.result(dates: dates))))
     }
     
 }

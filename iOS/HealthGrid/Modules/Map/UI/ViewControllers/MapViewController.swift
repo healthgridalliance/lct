@@ -7,16 +7,15 @@ import SwiftEntryKit
 import GoogleMaps
 import RxGoogleMaps
 import GoogleMapsUtils
+import SwiftyUserDefaults
 
 final class MapViewController: UIViewController {
     
     private var mapView = GMSMapView()
     private let mapButtonsView = UIView()
-    private let buttonsStackView = UIStackView()
-    private var statusButton = StyledButton()
-    private var configButton = StyledButton()
     private var infoButton = StyledButton()
     private var locationButton = StyledButton()
+    private let tabBar = MapTabBarView()
     
     private var heatmapLayer = GMUHeatmapTileLayer()
     
@@ -40,7 +39,14 @@ final class MapViewController: UIViewController {
     
     private func setupUI() {
         let guide = UIApplication.shared.keyWindow!.safeAreaInsets
-        view.sv(mapView, buttonsStackView, mapButtonsView)
+        view.sv(mapView, mapButtonsView, tabBar)
+
+        mapView.style {
+            $0.Top == view.Top
+            $0.Leading == view.Leading
+            $0.Trailing == view.Trailing
+            $0.Bottom == guide.bottom
+        }
 
         let separatorView = UIView()
         separatorView.style {
@@ -67,28 +73,16 @@ final class MapViewController: UIViewController {
             $0.layer.borderWidth = 0.5
             $0.layer.borderColor = UIColor.separator.cgColor
         }
-        
-        buttonsStackView.style {
-            $0.Leading == view.Leading + 16
-            $0.Trailing == view.Trailing - 16
-            $0.Bottom == guide.bottom + 16
-            $0.spacing = 16.0
-            $0.alignment = .center
-            $0.distribution = .fillEqually
-        }
-        
-        [statusButton, configButton].forEach {
-            $0.height(50)
-            buttonsStackView.addArrangedSubview($0)
+        tabBar.style {
+            $0.Leading == view.Leading
+            $0.Trailing == view.Trailing
+            $0.Bottom == guide.bottom
         }
     }
     
     private func setupStyle() {
         view.style {
-            $0.backgroundColor = .white
-        }
-        mapView.style {
-            $0.fillContainer()
+            $0.backgroundColor = .background
         }
         infoButton.style {
             $0.buttonStyle = .assetsIcon(name: "ic_map_info", colour: UIColor.blue, dimension: 22)
@@ -99,12 +93,6 @@ final class MapViewController: UIViewController {
                 guard let self = self else { return }
                 self.setupMap(withPermission: true)
             }
-        }
-        statusButton.style {
-            $0.buttonStyle = .blue(title: "map_status_button".localized)
-        }
-        configButton.style {
-            $0.buttonStyle = .blue(title: "map_config_button".localized)
         }
     }
  
@@ -125,26 +113,43 @@ final class MapViewController: UIViewController {
     func set(viewModel: MapViewModel) {
         self.viewModel = viewModel
         
+        let viewDidLoad = rx.sentMessage(#selector(UIViewController.viewDidLoad))
+            .mapToVoid()
+            .asDriver(onErrorJustReturn: ())
+        
+        let viewDidAppear = rx.sentMessage(#selector(UIViewController.viewDidAppear(_:)))
+            .take(1)
+            .skipWhile({ _ in Defaults[\.firstLaunch]})
+            .mapToVoid()
+            .asDriver(onErrorJustReturn: ())
+        
+        let tabBarOutput = tabBar.configure()
+        
         let output = viewModel.bind(input:
             MapViewModel.Input(
+                initialParameters: viewDidLoad,
+                checkExposure: viewDidAppear,
                 infoEvent: infoButton.rx.tap.asDriver(),
-                statusEvent: statusButton.rx.tap.asDriver(),
-                configEvent: configButton.rx.tap.asDriver())
+                tabEvent: tabBarOutput.tabEvent
+            )
         )
                 
         let heatmapEventBinding = Observable.combineLatest(mapView.rx_zoom.distinctUntilChanged(),
                                                            output.heatmapEvent.distinctUntilChanged())
             .subscribe(onNext: { [weak self] (zoom, data) in
-            guard let self = self else { return }
-            if let _ = self.heatmapLayer.map {
-                self.heatmapLayer.map = nil
-            }
-            self.heatmapLayer.radius = UInt(zoom * 1.5)
-            self.heatmapLayer.opacity = 1
-            self.heatmapLayer.minimumZoomIntensity = UInt(zoom * 0.6)
-            self.heatmapLayer.maximumZoomIntensity = UInt(zoom)
-            self.heatmapLayer.weightedData = data
-            self.heatmapLayer.map = self.mapView
+                guard let self = self else { return }
+                if let _ = self.heatmapLayer.map {
+                    self.heatmapLayer.map = nil
+                }
+                self.heatmapLayer.radius = UInt(zoom * 1.5)
+                self.heatmapLayer.opacity = 1
+                self.heatmapLayer.minimumZoomIntensity = UInt(zoom * 0.6)
+                self.heatmapLayer.maximumZoomIntensity = UInt(zoom)
+                self.heatmapLayer.weightedData = data
+                self.heatmapLayer.gradient = GMUGradient(colors: [UIColor(hexString: Defaults[\.minColor]), UIColor(hexString: Defaults[\.maxColor])],
+                                                         startPoints: [0.2, 1.0],
+                                                         colorMapSize: 256)
+                self.heatmapLayer.map = self.mapView
         })
         
         let userLocationEvent = output.showUserLocationEvent.subscribe(onNext: { [weak self] in

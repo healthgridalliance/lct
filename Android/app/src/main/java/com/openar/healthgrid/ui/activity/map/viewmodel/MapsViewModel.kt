@@ -1,69 +1,68 @@
 package com.openar.healthgrid.ui.activity.map.viewmodel
 
 import android.Manifest
+import android.content.Context
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.openar.healthgrid.Constants
 import com.openar.healthgrid.Constants.HEALTH_GRID_API
 import com.openar.healthgrid.HealthGridApplication
-import com.openar.healthgrid.api.entity.HeatMapObject
-import com.openar.healthgrid.api.entity.HeatMapPoints
+import com.openar.healthgrid.api.entity.AppParametersObject
 import com.openar.healthgrid.database.LocationInfoProvider
 import com.openar.healthgrid.repository.ApiRequestsRepository
-import com.openar.healthgrid.repository.CheckExposureRepository
 import com.openar.healthgrid.service.SaveLocationDataService
-import com.openar.healthgrid.util.*
+import com.openar.healthgrid.util.DateUtils
+import com.openar.healthgrid.util.PermissionUtils
+import com.openar.healthgrid.util.PreferenceStorage
+import com.openar.healthgrid.util.UpdateLocationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.Serializable
 
-
-class MapsViewModel : ViewModel(), ApiContract.ViewModel, Serializable {
+class MapsViewModel : ViewModel(), ApiContractBase.ViewModel {
     private var apiRequestsRepository: ApiRequestsRepository? = ApiRequestsRepository()
-    val trackingStatusId: MutableLiveData<Int> by lazy {
-        MutableLiveData(-1).also {
-            loadTrackingStatusValue()
-        }
-    }
-    val exposureInfo: MutableLiveData<MutableMap<String, Int>?> = MutableLiveData(null)
-    private val lastKnownLocation: MutableLiveData<Location> = MutableLiveData<Location>()
-//  TODO replace with next string when server call will work correctly
-    private val heatMapList: MutableLiveData<MutableList<HeatMapPoints>> = MutableLiveData<MutableList<HeatMapPoints>>()
-//    private val heatMapList: MutableLiveData<MutableList<HeatMapObject>> = MutableLiveData<MutableList<HeatMapObject>>()
-    private var localInfectedLocations: HeatMapObject? = null
+    val trackingStatusId: MutableLiveData<Int> = MutableLiveData(-1)
+    private val lastKnownLocation: MutableLiveData<Location> = MutableLiveData()
     private var bottomSheetOpened: MutableLiveData<Boolean> = MutableLiveData(false)
+    private var hasPermission = false
 
-    fun initApp() {
-        apiRequestsRepository?.getHeatZones()
-        setHeatMapList(loadMainTestHeatZones("HeatMap0DaysAgo.json"))
+    fun initApplication() {
+        apiRequestsRepository?.getInitialAppParameters()
     }
 
-    private fun loadTrackingStatusValue() {
+    fun loadTrackingStatusValue(context: Context) {
         CoroutineScope(Dispatchers.Default).launch {
-            val status = PreferenceStorage.getPropertyInt(
-                HealthGridApplication.getApplicationContext(),
-                PreferenceStorage.TRACKING_STATUS_VALUE
-            )
-            if (status == -1) {
-                trackingStatusId.postValue(Constants.INACTIVE_TRACKING_STATUS)
-            } else {
-                if (PermissionUtils.isPermissionGranted(HealthGridApplication.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                ) {
-                    trackingStatusId.postValue(status)
-                } else {
-                    trackingStatusId.postValue(Constants.INACTIVE_TRACKING_STATUS)
-                }
-            }
-            PreferenceStorage.addPropertyInt(
-                HealthGridApplication.getApplicationContext(),
-                PreferenceStorage.TRACKING_STATUS_VALUE,
-                trackingStatusId.value ?: Constants.INACTIVE_TRACKING_STATUS
-            )
+            hasPermission = PermissionUtils.isPermissionGranted(HealthGridApplication.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+            PermissionUtils.checkGeolocationServicesSwitchedOn(
+                context,
+                showDialog = false,
+                successCallback = { res ->
+                    var status = -1
+                    if (hasPermission && res) {
+                        status = PreferenceStorage.getPropertyInt(
+                            HealthGridApplication.getApplicationContext(),
+                            PreferenceStorage.TRACKING_STATUS_VALUE
+                        )
+                        if (status == -1) {
+                            trackingStatusId.postValue(Constants.ACTIVE_TRACKING_STATUS)
+                        } else {
+                            trackingStatusId.postValue(status)
+                        }
+                    } else {
+                        status = Constants.INACTIVE_TRACKING_STATUS
+                        trackingStatusId.postValue(Constants.INACTIVE_TRACKING_STATUS)
+                    }
+                    PreferenceStorage.addPropertyInt(
+                        HealthGridApplication.getApplicationContext(),
+                        PreferenceStorage.TRACKING_STATUS_VALUE,
+                        if (status == -1) Constants.ACTIVE_TRACKING_STATUS else status
+                    )
+                })
         }
     }
 
@@ -88,72 +87,37 @@ class MapsViewModel : ViewModel(), ApiContract.ViewModel, Serializable {
             )
     }
 
-    fun getHeatMapList(pos: Int): MutableList<LatLng>? = heatMapList.value?.get(pos)?.points ?: mutableListOf()
-
-    private fun loadMainTestHeatZones(fileName: String): LocationList =
-        FileReadUtils.readJsonFile(fileName, HealthGridApplication.getApplicationContext())
-
-    fun onExposureButtonTap() {
-        for(daysBefore in 0..Constants.DAYS_BEFORE_TODAY)
-            apiRequestsRepository?.getLocalHeatZones(lastKnownLocation.value, DateUtils.getDateDaysBefore(daysBefore))
-        exposureInfo.value = mutableMapOf("20 May 2020" to 0, "3 June 2020" to 0, "13 June 2020" to 0)
-    }
-
-    fun loadTestData() {
-        setHeatMapList(loadMainTestHeatZones("HeatMap1DaysAgo.json"))
-        setHeatMapList(loadMainTestHeatZones("HeatMap2DaysAgo.json"))
-    }
-
     fun deleteButtonTapped() {
         SaveLocationDataService.instance.deleteAllData()
         apiRequestsRepository?.deleteAllData()
     }
 
-    fun onFirstAppLaunch() {
-        apiRequestsRepository?.registerApp()
-    }
-
-    fun onInfectedStatusChanged(infected: Boolean) {
-        apiRequestsRepository?.changeInfectedStatus(infected)
-        sendLocationListIfNeeded(infected)
-    }
-
-    private fun setHeatMapList(heatMap: LocationList) {
-        val list = HeatMapPoints()
-        for(loc in heatMap.tagIds) {
-            try {
-                if(loc?.lat != null && loc.lng != null) {
-                    list.points.add(LatLng(loc.lat!!.toDouble(), loc.lng!!.toDouble()))
-                }
-            } catch (ex: Exception) {}
-        }
-        var newData = heatMapList.value
-        if(newData == null) newData = mutableListOf()
-        newData.add(list)
-        heatMapList.value = newData
-    }
-
-
-    private fun sendLocationListIfNeeded(infected: Boolean) {
-        if (infected) {
+    fun sendLocationList(testId: String) {
             CoroutineScope(Dispatchers.Default).launch {
+                val locationCallback: LocationCallback = object : LocationCallback() {
+                    override fun onLocationResult(locationResult: LocationResult?) {
+                        if (locationResult != null) {
+                            SaveLocationDataService.instance.saveLocationIfNeeded(locationResult.locations)
+                            SaveLocationDataService.instance.updateLastObjectCheckOutTime(DateUtils.getCalendar().timeInMillis)
+                            val locationList = LocationInfoProvider.instance?.getAllData()
+                            locationList?.let {
+                                apiRequestsRepository?.sendLocationList(locationList, testId)
+                            }
+                        }
+                    }
+                }
+
                 SaveLocationDataService.instance.updateLastObjectCheckOutTime(DateUtils.getCalendar().timeInMillis)
                 LocationInfoProvider.instance?.deleteExpiredData(Constants.KEEP_MAX_HOURS)
                 val locationList = LocationInfoProvider.instance?.getAllData()
                 locationList?.let {
-                    apiRequestsRepository?.sendLocationList(locationList)
+                    if(locationList.isNotEmpty())
+                        apiRequestsRepository?.sendLocationList(locationList, testId)
+                    else {
+                        UpdateLocationUtils().getCurrentLocation(HealthGridApplication.getApplicationContext(), locationCallback)
+                    }
                 }
             }
-        }
-    }
-
-    private fun onFoundExposure(info: Pair<String, Int>) {
-        if(exposureInfo.value == null) {
-            exposureInfo.value = mutableMapOf()
-        }
-        val curInfo = exposureInfo.value
-        curInfo?.put(info.first, info.second)
-        exposureInfo.postValue(curInfo)
     }
 
     override fun onError(error: String) {
@@ -166,13 +130,22 @@ class MapsViewModel : ViewModel(), ApiContract.ViewModel, Serializable {
         msg?.let { Log.d(HEALTH_GRID_API, msg) }
     }
 
-    override fun onHeatZonesUpdated(heatZones: HeatMapObject?) {
-//        TODO uncomment  when server call will work correctly
-//        heatMapList = heatZones
-    }
-
-    override fun onLocalHeatZonesUpdated(infectedLocations: HeatMapObject?) {
-        infectedLocations?.let { CheckExposureRepository(it).checkExposure(this::onFoundExposure) }
+    override fun onGetAppParameters(parameters: AppParametersObject) {
+        PreferenceStorage.addPropertyString(
+            HealthGridApplication.getApplicationContext(),
+            PreferenceStorage.LEGEND_MAX_COLOR,
+            parameters.data?.maxColor ?: ""
+        )
+        PreferenceStorage.addPropertyString(
+            HealthGridApplication.getApplicationContext(),
+            PreferenceStorage.LEGEND_MIN_COLOR,
+            parameters.data?.minColor ?: ""
+        )
+        PreferenceStorage.addPropertyInt(
+            HealthGridApplication.getApplicationContext(),
+            PreferenceStorage.MAX_EXPOSURE_DISTANCE_METERS,
+            parameters.data?.exposureDistance ?: Constants.MAX_DISTANCE_EXPOSURE_METER
+        )
     }
 
     override fun onCleared() {
@@ -182,6 +155,6 @@ class MapsViewModel : ViewModel(), ApiContract.ViewModel, Serializable {
     }
 
     init {
-        apiRequestsRepository?.subscribe(this)
+        apiRequestsRepository?.subscribe(viewModel = this)
     }
 }

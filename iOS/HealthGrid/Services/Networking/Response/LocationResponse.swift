@@ -1,37 +1,54 @@
 import Foundation
 import CoreLocation
+import ObjectMapper
 
-public struct LocationResponse: Codable {
+public struct LocationResponse: Mappable {
     
-    public let result: [Location]?
-    public let message: String?
-    public let date: Date?
-    public let minColor: String?
-    public let maxColor: String?
+    var locations: [Location]?
+    var date: String?
+    
+    public init?(map: Map) {
+    }
+
+    mutating public func mapping(map: Map) {
+        locations <- map["result.latLongs"]
+        date <- map["result.date"]
+        
+        if let _ = locations, let date = date {
+            for index in (0 ..< locations!.count) {
+                locations![index].date = DateFormatter.serverDateFormatter.date(from: date)
+            }
+        }
+    }
     
 }
 
-public struct Location: Codable {
-    public let checkInTime: Date
-    public var checkOutTime: Date
-    public let date: Date
-    public let latitude: Double
-    public let longitude: Double
+public struct Location: Mappable, Encodable {
+    var checkInTime: Date?
+    var checkOutTime: Date?
+    var date: Date?
+    var latitude: Double?
+    var longitude: Double?
     
-    public var location: CLLocation {
+    public var location: CLLocation? {
+        guard let latitude = latitude, let longitude = longitude else { return nil }
         return CLLocation(latitude: latitude, longitude: longitude)
     }
     
-    public init(checkInTime: Date,
-                checkOutTime: Date,
-                date: Date,
-                latitude: Double,
-                longitude: Double) {
+    public var testUniqueId: String?
+    
+    public init(checkInTime: Date?,
+                checkOutTime: Date?,
+                date: Date?,
+                latitude: String?,
+                longitude: String?) {
         self.checkInTime = checkInTime
         self.checkOutTime = checkOutTime
         self.date = date
-        self.latitude = latitude
-        self.longitude = longitude
+        if let latitude = latitude, let longitude = longitude {
+            self.latitude = Double(latitude)
+            self.longitude = Double(longitude)
+        }
     }
     
     public init(from location: CLLocation) {
@@ -42,31 +59,16 @@ public struct Location: Codable {
         self.longitude = location.coordinate.longitude
     }
     
-    private enum CodingKeys: String, CodingKey {
-        case checkInTime
-        case checkOutTime
-        case date
-        case latitude
-        case longitude
+    public init?(map: Map) {
     }
 
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        checkInTime = try container.decode(Date.self, forKey: .checkInTime)
-        checkOutTime = try container.decode(Date.self, forKey: .checkOutTime)
-        date = try container.decode(Date.self, forKey: .date)
-        latitude = try container.decode(Double.self, forKey: .latitude)
-        longitude = try container.decode(Double.self, forKey: .longitude)
+    mutating public func mapping(map: Map) {
+        checkInTime <- (map["checkInTime"], JSONStringToDateTransform())
+        checkOutTime <- (map["checkOutTime"], JSONStringToDateTransform())
+        date <- (map["date"], JSONStringToDateTransform())
+        latitude <- (map["latitude"], JSONStringToDoubleTransform())
+        longitude <- (map["longitude"], JSONStringToDoubleTransform())
+        testUniqueId <- map["testUniqueId"]
     }
-}
-
-extension Location: Equatable {
-    public static func == (lhs: Location, rhs: Location) -> Bool {
-        return lhs.checkInTime == rhs.checkInTime &&
-            lhs.checkOutTime == rhs.checkOutTime &&
-            lhs.date == rhs.date &&
-            lhs.latitude == rhs.latitude &&
-            lhs.longitude == rhs.longitude
-    }
+    
 }

@@ -3,10 +3,8 @@ package com.openar.healthgrid.service
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.openar.healthgrid.Constants
@@ -23,7 +21,7 @@ class StartJobAfterDelay(private val context: Context, workerParams: WorkerParam
         if(PermissionUtils.isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             PreferenceStorage.addPropertyBoolean(context, PreferenceStorage.NEED_ACTIVATE_TRACKING, true)
             PreferenceStorage.addPropertyInt(context, PreferenceStorage.TRACKING_STATUS_VALUE, Constants.ACTIVE_TRACKING_STATUS)
-            WorkUtils.startBackgroundJob(context)
+            WorkUtils.startLocationTracking(context)
             createLocalBroadcast()
             Log.d("LocationApp", "*************** AFTER DELAY ***************")
         }

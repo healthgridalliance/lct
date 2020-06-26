@@ -26,11 +26,7 @@ class LocationInfoEntity(
 
     @SerializedName("longitude")
     @ColumnInfo(name = "Longitude")
-    var longitude: String,
-
-    @SerializedName("applicationId")
-    @ColumnInfo(name = "ApplicationID")
-    var applicationId: String
+    var longitude: String
 ){
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0

@@ -6,35 +6,47 @@
 
 "connection_error_message" = "You are in offline mode.\nPlease connect to the internet to view the data";
 
-"location_popup_title" = "Permission for Location was denied";
-"location_popup_message" = "Please enable access to Location in the Settings app";
-"location_popup_settings" = "Settings";
+"location_settings_popup_title" = "Permission for Location was denied";
+"location_settings_popup_message" = "Please enable access to Location in the Settings app";
+"location_settings_popup_settings" = "Settings";
+"location_popup_title" = "Device can't access your current geolocation data";
+"location_popup_message" = "Please update your location or restart application";
 
 "onboarding_description_title" = "Start your way to safety";
 "onboarding_description_button" = "Start Journey";
-"onboarding_features_title" = "Keep you privacy save";
+"onboarding_features_title" = "Keep your privacy save";
 "onboarding_features_button" = "Privacy Policy";
 
 "privacy_policy_title" = "Privacy Policy of tracking location";
 "privacy_policy_button" = "Agree to Track Location";
 "privacy_policy_agree" = "I agree with Privacy Policy";
 
-"map_status_button" = "My status";
-"map_config_button" = "Configuration";
-"map_legend_title" = "Legend";
-"map_legend_healthy" = "Healthy people";
-"map_legend_not_well" = "People are not feeling well";
-"map_legend_ill" = "People with COVID-19";
+"tab_bar_diagnosis_button" = "I Have COVID-19";
+"tab_bar_exposure_button" = "Check Exposure";
+"tab_bar_config_button" = "Configuration";
 
-"status_title" = "My status";
-"status_info" = "Set your health status so we can notify health authorities and others who have crossed paths with you. This will have to stop the spread of the virus.";
-"status_healthy" = "I am Healthy";
-"status_not_well" = "I am not feeling well";
-"status_ill" = "I have COVID-19";
-"status_exposure" = "Check Exposure";
-"status_exposure_positive_title" = "Attention";
-"status_exposure_positive_message" = "You may have been in close contact with someone who was infected on the following date(s):\n\n";
-"status_exposure_negative_message" = "You have not been in close contact with infected people.";
+"map_legend_title" = "Legend";
+"map_legend_hight" = "The high density of infected people";
+"map_legend_low" = "The low density of infected people";
+
+"diagnosis_notify_title" = "Notify Others";
+"diagnosis_notify_subtitle" = "Share a positive diagnosis";
+"diagnosis_notify_info" = "If you tested positive for the virus that causes COVID-19, you can choose to share your diagnosis. This will help others in your community contain the spread of the virus.";
+"diagnosis_notify_button" = "Share a Positive Diagnosis";
+
+"diagnosis_verify_title" = "Verify Your Positive Diagnosis";
+"diagnosis_verify_subtitle" = "The unique test identifier that came with your COVID-19 test can be used to verify your positive diagnosis.";
+"diagnosis_verify_identifier" = "Unique Test Identifer";
+"diagnosis_verify_button" = "Next";
+
+"diagnosis_verify_alert_title" = "Share your locations from this device in the last 14 days?";
+"diagnosis_verify_alert_message" = "Sharing your Location from the past 14 days helps the app determine who should be notified that they may have been exposed to COVID-19";
+"diagnosis_verify_alert_dont_allow" = "Don't Allow";
+"diagnosis_verify_alert_allow" = "Allow";
+
+"diagnosis_result_title" = "Your Positive Diagnosis Has Been Shared";
+"diagnosis_result_subtitle" = "Please self-quarantine at home for the next 14 days";
+"diagnosis_result_button" = "Done";
 
 "configuration_title" = "Configuration";
 "configuration_history" = "Health History";
@@ -49,3 +61,15 @@
 "history_title" = "History";
 "history_pick_button" = "Pick a date";
 "history_popup" = "Select a date to see\nstatistics for that day";
+
+"exposure_title" = "Your Exposure";
+"exposure_info" = "Location Tracking based HealthGrid Alliance Contact tracking App.\n\nClick on the button to get your exposure to COVID-19 Notification.";
+"exposure_skip_button" = "Skip";
+"exposure_check_button" = "Check Exposure";
+"exposure_status_infected" = "You have recently been exposed to someone who has tested positive COVID-19.";
+"exposure_status_healthy" = "You have not been in close contact with infected people.";
+"exposure_info_button" = "More Information";
+"exposure_menu_button" = "Main menu";
+"exposures_title" = "Exposures";
+"exposures_section_title" = "Exposures in past 14 days";
+"exposure_item_title" = "Possible Exposure";

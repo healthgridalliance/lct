@@ -10,8 +10,8 @@
     <color name="background">@android:color/white</color>
     <color name="map_small_button_color">#FFFFFF</color>
     <color name="map_small_button_border_color">#80979797</color>
-    <color name="legend_healthy_color">#69AD84</color>
-    <color name="legend_not_feeling_well_color">#F6B76C</color>
+    <color name="max_color">#FF0000</color>
+    <color name="min_color">#008000</color>
     <color name="legend_infected_color">#EE8E89</color>
     <color name="dialog_background">#F5F5F7</color>
     <color name="inactive_view_color">#80979797</color>
@@ -19,5 +19,8 @@
     <color name="weekday_focus_color">#F5F5F7</color>
     <color name="day_color">#000000</color>
     <color name="offline_status_color">#E04A55</color>
-
+    <color name="exposure_date_color">#EE8E89</color>
+    <color name="navigation_bar_color">#cfcaca</color>
+    <color name="text_color">#2A2D34</color>
+    <color name="secondary_text_color">#662A2D34</color>
 </resources>

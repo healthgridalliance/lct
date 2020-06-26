@@ -4,9 +4,7 @@ import RxCocoa
 
 public enum SettingsCellType {
     case healthy
-    case notWell
     case ill
-    case exposure
     case history
     case trackingOn
     case trackingOff
@@ -17,9 +15,7 @@ public enum SettingsCellType {
     var title: String {
         switch self {
         case .healthy: return "status_healthy".localized
-        case .notWell: return "status_not_well".localized
         case .ill: return "status_ill".localized
-        case .exposure: return "status_exposure".localized
         case .history: return "configuration_history".localized
         case .trackingOn: return "configuration_tracking_on".localized
         case .trackingOff: return "configuration_tracking_off".localized
@@ -31,8 +27,8 @@ public enum SettingsCellType {
     
     var isSelectionEnabled: Bool {
         switch self {
-        case .healthy, .notWell, .ill, .trackingOn, .trackingOff, .trackingOffForever: return true
-        case .exposure, .history, .deleteData, .privacy: return false
+        case .healthy, .ill, .trackingOn, .trackingOff, .trackingOffForever: return true
+        case .history, .deleteData, .privacy: return false
         }
     }
 }

@@ -8,7 +8,7 @@ import androidx.fragment.app.DialogFragment
 import com.openar.healthgrid.R
 
 
-class TooltipInfoDialog private constructor(): DialogFragment() {
+class TooltipInfoDialog : DialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -17,9 +17,11 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.openar.healthgrid.R
+import com.openar.healthgrid.util.PreferenceStorage
+import com.openar.healthgrid.util.StringFormatUtils
 import kotlinx.android.synthetic.main.dialog_header.*
 
-class LegendInfoDialog private constructor(): DialogFragment() {
+class LegendInfoDialog : DialogFragment() {
     private var onDismissListener: DialogInterface.OnDismissListener? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
@@ -77,6 +79,10 @@ class LegendInfoDialog private constructor(): DialogFragment() {
         private var textArray: TypedArray = context.resources.obtainTypedArray(R.array.legend_text_lines)
         private var iconArray: TypedArray = context.resources.obtainTypedArray(R.array.legend_icons)
         private var iconColorArray: TypedArray = context.resources.obtainTypedArray(R.array.legend_icon_colors)
+        private var legendColors = listOf(
+            PreferenceStorage.getPropertyString(context, PreferenceStorage.LEGEND_MAX_COLOR),
+            PreferenceStorage.getPropertyString(context, PreferenceStorage.LEGEND_MIN_COLOR)
+        )
 
         class LegendViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val icon = view.findViewById(R.id.legend_item_icon) as ImageView
@@ -92,13 +98,13 @@ class LegendInfoDialog private constructor(): DialogFragment() {
         override fun onBindViewHolder(holder: LegendViewHolder, position: Int) {
             holder.text.text = textArray.getText(position)
             holder.icon.setImageDrawable(iconArray.getDrawable(position))
-            ContextCompat.getColor(context, R.color.legend_healthy_color)
-            holder.icon.setColorFilter(
-                iconColorArray.getColor(
-                    position,
-                    ContextCompat.getColor(context, R.color.legend_healthy_color)
-                )
-            )
+            val isValidColor = StringFormatUtils.isHexFormat(legendColors[position])
+            val color =
+                if (isValidColor)
+                    Color.parseColor(legendColors[position])
+                else
+                    iconColorArray.getColor(position, ContextCompat.getColor(context, R.color.max_color))
+            holder.icon.setColorFilter(color)
         }
 
         override fun getItemCount() = textArray.length()

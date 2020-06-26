@@ -9,10 +9,10 @@ object Constants {
     const val NO_MESSAGE = "There is no error message"
     const val HEALTH_GRID_API = "HealthGridApi"
     const val ACTIVE_TRACKING_STATUS = 1
-    const val INACTIVE_TRACKING_STATUS = 2
-    const val PARTIALLY_INACTIVE_TRACKING_STATUS = 3
+    const val PARTIALLY_INACTIVE_TRACKING_STATUS = 2
+    const val INACTIVE_TRACKING_STATUS = 3
     const val INTERVAL_MILLIS = 2000L
-    const val FASTEST_INTERVAL_MILLIS = 0L
+    const val FASTEST_INTERVAL_MILLIS = 10L
     const val DAYS_BEFORE_TODAY = 14
 }
 

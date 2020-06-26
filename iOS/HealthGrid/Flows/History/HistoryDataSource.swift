@@ -10,8 +10,8 @@ final class HistoryDataSource {
 
 extension HistoryDataSource: HistoryDataSourceProtocol {
     
-    func getHistory() -> Observable<LocationResponse> {
-        let request = HistoryRequest.history
+    func getHistory(date: Date) -> Observable<LocationResponse> {
+        let request = HeatZonesRequest.heatzone(date: date)
         return apiClient
             .send(apiRequest: request)
             .observeOn(MainScheduler.instance)

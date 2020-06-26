@@ -19,11 +19,13 @@ public final class HistoryViewModel: AppStepper {
     func bind(input: Input) -> Output {
         let dateEventBinding = input.dateEvent
             .distinctUntilChanged()
-            .flatMap({_ in self.dataSource.getHistory()})
-            .subscribe(onNext: { [weak self] response in
-                guard let self = self else { return }
-                self.getHeatmapData(for: Date())
-        })
+            .flatMap({self.dataSource.getHistory(date: $0)})
+            .compactMap({$0.locations})
+            .compactMap({$0.compactMap({$0.location})
+                .map({GMUWeightedLatLng(coordinate: CLLocationCoordinate2DMake($0.coordinate.latitude, $0.coordinate.longitude),
+                                        intensity: 0.1)})})
+            .delay(.milliseconds(400), scheduler: MainScheduler.instance)
+            .bind(to: heatmapData)
         let tipEventBinding = input.tipEvent.drive(onNext: { [weak self] in
             guard let self = self else { return }
             self.steps.accept(HistorySteps.tip)
@@ -40,38 +42,6 @@ public final class HistoryViewModel: AppStepper {
                 closeEventBinding
             ])
         )
-    }
-    
-    #warning("Temp solution")
-    private func getHeatmapData(for date: Date) {
-        var list = [GMUWeightedLatLng]()
-        do {
-            var testHeatmapData = Date().day - date.day
-            if testHeatmapData > 2 {
-                testHeatmapData = 2
-            }
-            if let path = Bundle.main.url(forResource: "\(testHeatmapData)", withExtension: "json") {
-                let data = try Data(contentsOf: path)
-                let json = try JSONSerialization.jsonObject(with: data, options: [])
-                if let object = json as? [[String: Any]] {
-                    for item in object {
-                        if let lat = item["lat"] as? CLLocationDegrees,
-                            let lng = item["lng"] as? CLLocationDegrees {
-                            let coords = GMUWeightedLatLng(coordinate: CLLocationCoordinate2DMake(lat, lng),
-                                                           intensity: 0.1)
-                            list.append(coords)
-                        }
-                    }
-                } else {
-                    print("Could not read the JSON.")
-                }
-            }
-        } catch {
-            print(error.localizedDescription)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-            self.heatmapData.accept(list)
-        }
     }
     
 }

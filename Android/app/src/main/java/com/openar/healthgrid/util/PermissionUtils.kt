@@ -22,13 +22,13 @@ object PermissionUtils {
         return if (isPermissionGranted(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             val backgroundPermissionStatus = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
             if (backgroundPermissionStatus == PackageManager.PERMISSION_GRANTED) {
-                displayLocationSettingsRequest(context)
+                true
             } else {
                 ActivityCompat.requestPermissions(
                     context as Activity, arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
                     MapsMainActivity.BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE
                 )
-                displayLocationSettingsRequest(context)
+                true
             }
         } else {
             ActivityCompat.requestPermissions(
@@ -44,32 +44,38 @@ object PermissionUtils {
         return permissionStatus == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun displayLocationSettingsRequest(context: Context): Boolean {
+    fun checkGeolocationServicesSwitchedOn(
+        context: Context,
+        successCallback: ((res: Boolean) -> Unit)? = null,
+        showDialog: Boolean = true
+    ) {
         val locationRequest = LocationRequest.create()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        locationRequest.interval = 3000
-        locationRequest.fastestInterval = 1000
+        locationRequest.interval = 2000
+        locationRequest.fastestInterval = 10
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
         builder.setAlwaysShow(true)
         val task: Task<LocationSettingsResponse> =
-            LocationServices.getSettingsClient(context as Activity)
-                .checkLocationSettings(builder.build())
+            LocationServices.getSettingsClient(context as Activity).checkLocationSettings(builder.build())
         task.addOnCompleteListener { res ->
             try {
                 res.getResult(ApiException::class.java)
+                successCallback?.let { it(true) }
             } catch (exception: ApiException) {
-                when (exception.statusCode) {
-                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
-                        try {
-                            val resolvable = exception as ResolvableApiException
-                            resolvable.startResolutionForResult(context, REQUEST_CHECK_SETTINGS)
-                        } catch (e: SendIntentException) {
-                            Log.i("TAG", "PendingIntent unable to execute request.")
+                successCallback?.let { it(false) }
+                if (showDialog && !PreferenceStorage.getPropertyBooleanFalse(context, PreferenceStorage.GEOLOCATION_DIALOG_VISIBLE)) {
+                    when (exception.statusCode) {
+                        LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
+                            try {
+                                PreferenceStorage.addPropertyBoolean(context, PreferenceStorage.GEOLOCATION_DIALOG_VISIBLE, true)
+                                val resolvable = exception as ResolvableApiException
+                                resolvable.startResolutionForResult(context, REQUEST_CHECK_SETTINGS)
+                            } catch (e: SendIntentException) {
+                            }
                         }
                     }
                 }
             }
         }
-        return true
     }
 }

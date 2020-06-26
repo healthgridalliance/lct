@@ -8,10 +8,16 @@ object PreferenceStorage {
     private const val STORAGE_NAME = "base_storage"
 
     const val FIRST_LAUNCH = "first_launch"
-    const val HEALTH_STATUS_VALUE = "health_status_value"
+    const val USER_TRACKING_STATUS_VALUE = "user_tracking_status_value"
     const val TRACKING_STATUS_VALUE = "tracking_status_value"
-    const val TRACKING_STARTED_FLAG = "TRACKING_STARTED_FLAG"
-    const val NEED_ACTIVATE_TRACKING = "NEED_ACTIVATE_TRACKING"
+    const val TRACKING_STARTED_FLAG = "tracking_started_flag"
+    const val NEED_ACTIVATE_TRACKING = "need_activate_tracking"
+    const val TEST_ID = "test_id"
+    const val SETTINGS_DIALOG_VISIBLE = "settings_dialog_visible"
+    const val GEOLOCATION_DIALOG_VISIBLE = "geolocation_dialog_visible"
+    const val LEGEND_MIN_COLOR = "legend_min_color"
+    const val LEGEND_MAX_COLOR = "legend_max_color"
+    const val MAX_EXPOSURE_DISTANCE_METERS = "max_exposure_distance_meters"
 
     private var storage: SharedPreferences? = null
     private var editor: SharedPreferences.Editor? = null
@@ -33,6 +39,17 @@ object PreferenceStorage {
     fun getPropertyBooleanTrue(context: Context, name: String?): Boolean {
         init(context)
         return storage?.getBoolean(name, java.lang.Boolean.TRUE) ?: java.lang.Boolean.TRUE
+    }
+
+    fun addPropertyString(context: Context, name: String, value: String) {
+        init(context)
+        editor?.putString(name, value)
+        editor?.apply()
+    }
+
+    fun getPropertyString(context: Context, name: String?): String {
+        init(context)
+        return storage?.getString(name, "") ?: ""
     }
 
     fun getPropertyBooleanFalse(context: Context, name: String): Boolean {

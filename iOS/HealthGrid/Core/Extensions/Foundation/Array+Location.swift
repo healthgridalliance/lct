@@ -7,11 +7,3 @@ extension Array where Element == CLLocation {
     }
     
 }
-
-extension Array where Element == Location {
-    
-    func mapToLocation() -> [CLLocation] {
-        return map({CLLocation(latitude: $0.latitude, longitude: $0.longitude)})
-    }
-    
-}

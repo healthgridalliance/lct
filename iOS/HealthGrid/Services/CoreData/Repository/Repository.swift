@@ -33,11 +33,12 @@ final class Repository<T: CoreDataRepresentable>: AbstractRepository where T == 
     
     func save(entity: T) -> Observable<Void> {
         return keepDataForLastTwoWeeks()
-            .flatMap({self.updateLastEntity()})
-            .flatMap({entity.sync(in: self.context)
-                .mapToVoid()
-                .flatMapLatest(self.context.rx.save)
-        })
+            .flatMap({self.updateLastEntity()
+                .flatMap({entity.sync(in: self.context)
+                    .mapToVoid()
+                    .flatMapLatest(self.context.rx.save)
+                })
+            })
     }
     
     func deleteAll() -> Observable<Void> {
@@ -61,7 +62,7 @@ extension Repository {
     private func keepDataForLastTwoWeeks() -> Observable<Void> {
         let request = T.CoreDataType.fetchRequest()
         request.sortDescriptors = [Location.CoreDataType.date.ascending()]
-        request.predicate = NSPredicate(format: "date < %@", Date().lastTwoWeekDay() as NSDate)
+        request.predicate = NSPredicate(format: "date < %@", Date().getLastDays(count: 13).first! as NSDate)
         return context.rx.entities(fetchRequest: request)
             .map({$0.map({$0 as! NSManagedObject})})
             .flatMapLatest(context.rx.deleteAll)
@@ -73,10 +74,10 @@ extension Repository {
         return context.rx
             .entities(fetchRequest: request)
             .mapToDomain()
-            .map({ entities -> Observable<LocationEntity>? in
-                var entity = entities.last as? Location
-                entity?.checkOutTime = Date()
-                return entity?.sync(in: self.context)
+            .map({ entities -> Disposable in
+                guard var entity = entities.last as? Location else { return Disposables.create() }
+                entity.checkOutTime = Date()
+                return entity.sync(in: self.context).subscribe()
             })
             .mapToVoid()
             .flatMap(context.rx.save)

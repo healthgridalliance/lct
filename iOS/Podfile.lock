@@ -103,6 +103,7 @@ PODS:
     - nanopb/encode (= 1.30905.0)
   - nanopb/decode (1.30905.0)
   - nanopb/encode (1.30905.0)
+  - ObjectMapper (4.2.0)
   - Pageboy (3.6.1)
   - PromisesObjC (1.2.8)
   - QueryKit (0.14.1)
@@ -151,6 +152,7 @@ PODS:
     - QuickLayout (= 3.0.0)
   - SwiftLocation (4.2.0)
   - SwiftRichString (3.7.1)
+  - SwiftyUserDefaults (5.0.0)
   - Valet (3.2.8)
 
 DEPENDENCIES:
@@ -158,6 +160,7 @@ DEPENDENCIES:
   - Firebase/Analytics
   - Firebase/Crashlytics
   - Google-Maps-iOS-Utils
+  - ObjectMapper
   - Pageboy
   - QueryKit
   - ReachabilitySwift
@@ -176,6 +179,7 @@ DEPENDENCIES:
   - SwiftEntryKit
   - SwiftLocation
   - SwiftRichString
+  - SwiftyUserDefaults
   - Valet
 
 SPEC REPOS:
@@ -198,6 +202,7 @@ SPEC REPOS:
     - GoogleMaps
     - GoogleUtilities
     - nanopb
+    - ObjectMapper
     - Pageboy
     - PromisesObjC
     - QueryKit
@@ -220,6 +225,7 @@ SPEC REPOS:
     - SwiftEntryKit
     - SwiftLocation
     - SwiftRichString
+    - SwiftyUserDefaults
     - Valet
 
 SPEC CHECKSUMS:
@@ -241,6 +247,7 @@ SPEC CHECKSUMS:
   GoogleMaps: 4b5346bddfe6911bb89155d43c903020170523ac
   GoogleUtilities: 39530bc0ad980530298e9c4af8549e991fd033b1
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
+  ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
   Pageboy: 29a2d474ad99404b4d77f325e0ab6d705930a4fb
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   QueryKit: 60dae8ff75d5805f9c703c68c0ef4294c9dd7de6
@@ -263,8 +270,9 @@ SPEC CHECKSUMS:
   SwiftEntryKit: 340713c2e4a6662c5149629990bf1088bf5f0389
   SwiftLocation: 609ac8859f2c5d48a6cadd2a58c63b1dae02dc25
   SwiftRichString: 9a6a70b4fe2cf428e38348b5ada5400da74621fd
+  SwiftyUserDefaults: 33fcb42bd1feb53a37d873feb62c82967db5f7f6
   Valet: 16d0537d70db79d9ba953b9060b5da4fb8004e51
 
-PODFILE CHECKSUM: 939a3c43bcea7bfc2a3150f8000fe2a6951929c6
+PODFILE CHECKSUM: bb472986391096edac68dd2d930675d2cd807bf6
 
 COCOAPODS: 1.7.5

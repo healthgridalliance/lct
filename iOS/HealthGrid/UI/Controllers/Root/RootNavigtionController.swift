@@ -1,12 +1,12 @@
 import UIKit
 import RxSwift
 import Reachability
+import SwiftyUserDefaults
 
 class RootNavigationController: UINavigationController {
     
     weak var viewModel: MainViewModel?
     
-    private let firstLaunch = FirstLaunch(key: UserDefaults.wasLaunchedBeforeKey)
     private let reachability = try? Reachability()
     
     deinit {
@@ -28,15 +28,13 @@ class RootNavigationController: UINavigationController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if firstLaunch.isFirstLaunch {
+        if Defaults[\.firstLaunch] {
             viewModel?.steps.accept(MainStep.onboarding(animated: true))
-        } else {
-            self.requestPermission()
         }
     }
     
     @objc private func requestPermission() {
-        guard !firstLaunch.isFirstLaunch else { return }
+        guard !Defaults[\.firstLaunch] else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             LocationTracker.shared.requestPermission()
         }

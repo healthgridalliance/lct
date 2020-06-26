@@ -40,7 +40,7 @@
                 style="@style/BaseAppButton"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="12dp"
                 android:background="@drawable/base_button_box_radius"
                 android:text="@string/close_string" />
         </RelativeLayout>

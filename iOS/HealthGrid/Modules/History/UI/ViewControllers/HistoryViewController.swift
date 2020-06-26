@@ -6,6 +6,7 @@ import RxCocoa
 import SwiftEntryKit
 import GoogleMaps
 import GoogleMapsUtils
+import SwiftyUserDefaults
 
 final class HistoryViewController: UIViewController {
     
@@ -50,23 +51,16 @@ final class HistoryViewController: UIViewController {
             $0.backgroundColor = .white
         }
         
-        var topOffset: CGFloat
-        if #available(iOS 13.0, *) {
-            topOffset = 30
-        } else {
-            topOffset = 50
-        }
-        
         mapView.style {
             $0.fillContainer()
         }
         closeButton.style {
-            $0.Top == view.Top + topOffset
+            $0.Top == topOffset
             $0.Trailing == view.Trailing - 16
             $0.buttonStyle = .assetsIcon(name: "ic_close", colour: nil, dimension: 44)
         }
         titleLabel.style {
-            $0.Top == view.Top + topOffset
+            $0.Top == topOffset
             $0.Leading == view.Leading + 16
             $0.Trailing == closeButton.Trailing - 16
             $0.text = "history_title".localized
@@ -116,16 +110,19 @@ final class HistoryViewController: UIViewController {
         let heatmapEventBinding = Observable.combineLatest(mapView.rx_zoom.distinctUntilChanged(),
                                                            output.heatmapEvent.distinctUntilChanged())
             .subscribe(onNext: { [weak self] (zoom, data) in
-            guard let self = self else { return }
-            if let _ = self.heatmapLayer.map {
-                self.heatmapLayer.map = nil
-            }
-            self.heatmapLayer.radius = UInt(zoom * 1.5)
-            self.heatmapLayer.opacity = 1
-            self.heatmapLayer.minimumZoomIntensity = UInt(zoom * 0.6)
-            self.heatmapLayer.maximumZoomIntensity = UInt(zoom)
-            self.heatmapLayer.weightedData = data
-            self.heatmapLayer.map = self.mapView
+                guard let self = self else { return }
+                if let _ = self.heatmapLayer.map {
+                    self.heatmapLayer.map = nil
+                }
+                self.heatmapLayer.radius = UInt(zoom * 1.5)
+                self.heatmapLayer.opacity = 1
+                self.heatmapLayer.minimumZoomIntensity = UInt(zoom * 0.6)
+                self.heatmapLayer.maximumZoomIntensity = UInt(zoom)
+                self.heatmapLayer.weightedData = data
+                self.heatmapLayer.gradient = GMUGradient(colors: [UIColor(hexString: Defaults[\.minColor]), UIColor(hexString: Defaults[\.maxColor])],
+                                                         startPoints: [0.2, 1.0],
+                                                         colorMapSize: 256)
+                self.heatmapLayer.map = self.mapView
         })
         
         disposeBag.insert(
