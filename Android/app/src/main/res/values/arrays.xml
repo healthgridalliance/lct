@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="welcome_images">
+        <item>@drawable/ic_welcome_start</item>
+        <item>@drawable/ic_welcome_lock</item>
+    </integer-array>
+
+    <string-array name="web_titles">
+        <item>Start your way to safety</item>
+        <item>Keep your privacy save</item>
+    </string-array>
+
+    <string-array name="web_links">
+        <item>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</item>
+        <item>&#8226; We do not collect the location of the healthy people\n\n&#8226; You Phone stores your movements details\n\n&#8226; You can send your locations for the last two weeks only if you infected by COVID-19</item>
+    </string-array>
+
+    <string-array name="welcome_button_text">
+        <item>@string/start_journey</item>
+        <item>@string/privacy_policy</item>
+    </string-array>
+
+    <integer-array name="legend_icons">
+        <item>@drawable/legend_circle</item>
+        <item>@drawable/legend_circle</item>
+    </integer-array>
+
+    <string-array name="legend_text_lines">
+        <item>@string/legend_high_density</item>
+        <item>@string/legend_low_density</item>
+    </string-array>
+
+    <integer-array name="legend_icon_colors">
+        <item>@color/max_color</item>
+        <item>@color/min_color</item>
+    </integer-array>
+</resources>

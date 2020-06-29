@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_constraintHeight_default="percent">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/history_map_padding"
+        app:cardCornerRadius="@dimen/map_action_button_radius">
+
+        <fragment
+            android:id="@+id/history_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/map_action_button_radius"
+            tools:context=".ui.activity.map.dialog.bottomsheet.HistoryBottomSheetDialog" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingTop="20dp"
+            android:paddingRight="16dp">
+
+            <include layout="@layout/dialog_header" />
+        </LinearLayout>
+
+        <include layout="@layout/no_connection_alert" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/date_picker_max_height"
+            android:layout_gravity="bottom"
+            android:layout_marginEnd="@dimen/date_picker_margin_end"
+            android:layout_marginBottom="@dimen/date_picker_margin_bottom">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toStartOf="@+id/date_picker_container"
+                android:background="@android:color/transparent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/date_picker_container_height"
+                    android:layout_gravity="center"
+                    android:background="@color/dialog_background" />
+
+                <LinearLayout
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center_vertical"
+                    android:background="@drawable/chosen_date_container_radius" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/date_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/date_picker_container_height"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:orientation="vertical" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/date_picker_container"
+                android:layout_width="76dp"
+                android:layout_height="@dimen/date_picker_container_height"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_gravity="end|center_vertical"
+                android:background="@drawable/date_view_radius"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingHorizontal="8dp">
+
+                <TextView
+                    android:id="@+id/date_picker"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/date_picker_string"
+                    android:textColor="@color/base_color"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

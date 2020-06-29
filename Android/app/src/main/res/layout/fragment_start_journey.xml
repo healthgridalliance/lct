@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/view_pager_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/button_area"
+        android:layout_alignParentTop="true">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/welcome_image_area_height"
+            android:layout_marginTop="@dimen/welcome_image_area_margin_top">
+            <ImageView
+                android:id="@+id/welcome_background"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/welcome_back_image_area_height"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:contentDescription="@string/welcome_background"
+                app:srcCompat="@drawable/ic_welcome_background" />
+
+                <ImageView
+                    android:id="@+id/drawable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/welcome_front_image_area_height"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="40dp"
+                    android:contentDescription="@string/welcome_image_girl" />
+        </FrameLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/welcome_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|top" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/button_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/next_button"
+            style="@style/BaseAppButton"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/base_button_box_radius"
+            android:text="@string/start_journey" />
+    </LinearLayout>
+</RelativeLayout>

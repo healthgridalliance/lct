@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/configuration_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_constraintHeight_default="percent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_sheet_radius"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingTop="20dp"
+        android:paddingRight="16dp">
+
+        <include layout="@layout/dialog_header" />
+
+        <TextView
+            android:id="@+id/health_history"
+            style="@style/BottomSheetTextLine"
+            android:text="@string/health_history" />
+
+        <RadioGroup
+            android:id="@+id/configuration_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/radio_turn_on"
+                style="@style/BottomSheetRadioButton"
+                android:text="@string/turn_on" />
+
+            <RadioButton
+                android:id="@+id/radio_turn_off"
+                style="@style/BottomSheetRadioButton"
+                android:text="@string/turn_off_for_time" />
+
+            <RadioButton
+                android:id="@+id/radio_turn_off_forever"
+                style="@style/BottomSheetRadioButton"
+                android:text="@string/turn_off_tracking" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/bottom_sheet_delete_all"
+            style="@style/BottomSheetTextLine"
+            android:text="@string/delete_tracking_data" />
+
+        <TextView
+            android:id="@+id/bottom_sheet_policy"
+            style="@style/BottomSheetTextLine"
+            android:layout_marginBottom="@dimen/bottom_sheet_bottom_padding"
+            android:text="@string/privacy_policy" />
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

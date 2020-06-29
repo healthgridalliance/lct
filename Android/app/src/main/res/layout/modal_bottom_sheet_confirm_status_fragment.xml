@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/button_area"
+    android:layout_below="@+id/message"
+    android:background="@drawable/bottom_sheet_radius">
+
+    <ImageView
+        android:id="@+id/background_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_background_exposures_details" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/bottom_sheet_toolbar" />
+
+        <include layout="@layout/confirm_status_info_box" />
+
+        <TextView
+            android:id="@+id/tooltip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/info_box"
+            android:layout_marginTop="16dp"
+            android:text="@string/confirm_status_start_tooltip"
+            android:textColor="@color/secondary_text_color"
+            android:textSize="16sp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/action_button"
+            android:layout_below="@+id/info_box"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp">
+
+            <RelativeLayout
+                android:id="@+id/test_identifier_container"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:layout_gravity="center"
+                android:background="@drawable/test_identifier_container"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/test_identifier"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/identifier_string"
+                    android:textAlignment="center"
+                    android:textColor="@color/text_color"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/test_identifier"
+                    android:layout_margin="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="12dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/first"
+                        style="@style/TestIdSymbolContainerStyle"
+                        android:imeOptions="actionNext"
+                        android:importantForAutofill="no"
+                        android:nextFocusRight="@id/second" />
+
+                    <EditText
+                        android:id="@+id/second"
+                        style="@style/TestIdSymbolContainerStyle"
+                        android:imeOptions="actionNext"
+                        android:importantForAutofill="no"
+                        android:nextFocusRight="@id/third" />
+
+                    <EditText
+                        android:id="@+id/third"
+                        style="@style/TestIdSymbolContainerStyle"
+                        android:imeOptions="actionNext"
+                        android:importantForAutofill="no"
+                        android:nextFocusRight="@id/fourth" />
+
+                    <EditText
+                        android:id="@+id/fourth"
+                        style="@style/TestIdSymbolContainerStyle"
+                        android:imeOptions="actionNext"
+                        android:importantForAutofill="no"
+                        android:nextFocusRight="@id/fifth" />
+
+                    <EditText
+                        android:id="@+id/fifth"
+                        style="@style/TestIdSymbolContainerStyle"
+                        android:imeOptions="actionNext"
+                        android:importantForAutofill="no"
+                        android:nextFocusRight="@null" />
+
+                    <EditText
+                        android:id="@+id/sixth"
+                        style="@style/TestIdSymbolContainerStyle"
+                        android:imeOptions="actionDone"
+                        android:importantForAutofill="no" />
+
+                </LinearLayout>
+            </RelativeLayout>
+
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/action_button"
+            style="@style/BaseAppButton"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/base_button_box_radius"
+            android:text="@string/confirm_status_start_button_text" />
+    </RelativeLayout>
+</FrameLayout>

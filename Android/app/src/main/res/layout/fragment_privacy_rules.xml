@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent">
+
+        <TextView
+            android:id="@+id/leading"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:clickable="true"
+            android:drawableStart="@drawable/ic_arrow_back"
+            android:drawablePadding="10dp"
+            android:focusable="true"
+            android:text="@string/back_label"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <WebView
+        android:id="@+id/privacy_web_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/button_area"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="?android:colorBackground"
+        android:paddingTop="@dimen/welcome_text_margin_top" />
+
+    <LinearLayout
+        android:id="@+id/button_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="vertical">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/policy_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/agree_privacy_policy"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/agree_button"
+            style="@style/BaseAppButton"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/inactive_base_button_box_radius"
+            android:enabled="false"
+            android:text="@string/btn_track_location_text" />
+    </LinearLayout>
+</RelativeLayout>

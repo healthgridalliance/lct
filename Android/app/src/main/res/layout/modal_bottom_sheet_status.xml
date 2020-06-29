@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/configuration_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_constraintHeight_default="percent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_sheet_radius"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingTop="20dp"
+        android:paddingRight="16dp">
+
+        <include layout="@layout/dialog_header" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginTop="26dp"
+            android:layout_marginBottom="8dp"
+            android:lineSpacingExtra="2sp"
+            android:text="@string/bottom_sheet_instructions"
+            android:textAlignment="textStart"
+            android:textColor="@android:color/background_dark"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/radio_group_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/bottom_sheet_bottom_padding"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/radio_healthy"
+                style="@style/BottomSheetRadioButton"
+                android:checked="true"
+                android:text="@string/healthy_string" />
+
+            <RadioButton
+                android:id="@+id/radio_infected"
+                style="@style/BottomSheetRadioButton"
+                android:text="@string/infected_string" />
+        </RadioGroup>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
